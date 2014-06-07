@@ -1,0 +1,130 @@
+<html>
+<head>
+<style type="text/css">
+#canvas-container
+{
+	position: relative;
+	top: 0;
+	left: 0;
+}
+
+.mycanvas
+{
+	position: absolute;
+}
+
+#mycanvas0
+{
+	z-index: 0;
+}
+
+#mycanvas1
+{
+	z-index: 1;
+}
+</style>
+<!-- onetime / interval -->
+<!-- clear when interval -->
+<!-- complex / coordinate => (l,b)-(r,t) -->
+<!-- size, div -->
+<!-- zoom out -->
+<!-- show zoom in hint -->
+<!-- square limited zoom -->
+<!-- callback(representative, { stroke:, fill: }) -->
+<!-- busy / cancel in busy -->
+<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/0.22.0/math.min.js"></script>
+<script type="text/javascript">
+window.onload = function() {
+    var math = mathjs();
+    var size = { x: 101, y: 101 };
+    var extent = { l: -10, b: -10, t: 10, r: 10 };
+    var extents = [];
+    var div = { x: 201, y: 201 };
+    var update;
+    var zoom;
+
+    var ele = $('.mycanvas').attr({ width: size.x, height: size.y });
+    var offset = ele.first().offset();
+
+    $('#canvas-container').width(size.x).height(size.y);
+
+    var getpos = function(e) { return {
+        x: (extent.r - extent.l) / size.x * (e.pageX - offset.left) + extent.l,
+        y: (extent.b - extent.t) / size.y * (e.pageY - offset.top) + extent.t
+    };};
+    var ctx = $.map(ele, function (ele) { return ele.getContext('2d'); });
+
+    var prec = function(val) { return math.format(val, { precision: 5}); };
+    var coord = function(x, y) { return '(' + prec(x) + ',' + prec(y) + ')'; };
+//  var col = ['#000000','#0000ff','#ff0000','#ff00ff','#00ff00','#00ffff','#ffff00'];
+    var extent_updater = function() { $('#extent').text(coord(extent.l,extent.b)+'-'+coord(extent.r,extent.t)); };
+    extent_updater();
+
+    var curpos = $('#current');
+    ele.mousemove(function(e) {
+        var p = getpos(e);
+        curpos.text(coord(p.x, p.y));
+    });
+    ele.mousedown(function(e) {
+        if(e.which == 1) {
+            zoom = { pageX: e.pageX, pageY: e.pageY };
+        }
+    });
+    ele.mouseup(function(e) {
+        if(e.which == 1) {
+            var e1 = e, e2 = zoom;
+            if(math.square(e1.pageX - e2.pageX)+math.square(e1.pageY - e2.pageY) > 100) {
+                var p1 = getpos(e1), p2 = getpos(e2);
+                extents.push(extent);
+                extent = { l: math.min(p1.x, p2.x), r: math.max(p1.x, p2.x), b: math.min(p1.y, p2.y), t: math.max(p1.y, p2.y) };
+                extent_updater();
+                update();
+            }
+        } else if(e.which == 2) {
+            if(extents.length > 0) {
+                extent = extents.pop();
+                extent_updater();
+                update();
+            }
+        }
+    });
+
+    var target = 0;
+    update = function() {
+        ele.eq(target).css('z-index', 1);
+        ctx[target].fillStyle = '#ffffff';
+        ctx[target].fillRect(0, 0, size.x, size.y);
+        for(var i = 0; i < div.y; ++i) {
+            for(var j = 0; j < div.x; ++j) {
+                var c = math.complex(0.5, 0);
+                var z = math.complex(extent.l + (extent.r - extent.l) / div.x * (j + .5), extent.b + (extent.t - extent.b) / div.y * (i + .5));
+                for(var k = 0; k < 10; ++k) {
+                    z = math.add(math.pow(z, 3), c);
+                    if(math.abs(z) > 10) break;
+                }
+                ctx[target].fillStyle = ((math.abs(z) < 10) ? '#000000' : '#ffffff');
+                ctx[target].fillRect(size.x / div.x * j, size.y - size.y / div.y * (i + 1), size.x / div.x, size.y / div.y);
+            }
+        }
+        ctx[target].strokeStyle = '#000000';
+        ctx[target].strokeRect(0, 0, size.x, size.y);
+//	ele.eq(  target).css('z-index', 1);
+//	ele.eq(1-target).css('z-index', 0);
+//      target = 1 - target;
+//      setTimeout(update, 1000);
+    };
+    update();
+}
+</script>
+</head>
+<body>
+<div id="canvas-container">
+<canvas class="mycanvas" id="mycanvas0"></canvas>
+<canvas class="mycanvas" id="mycanvas1"></canvas>
+</div>
+<p id="extent"></p>
+<p id="current"></p>
+</body>
+</html>
