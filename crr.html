@@ -110,9 +110,9 @@ window.onload = function() {
                 var z = math.complex(extent.l + (extent.r - extent.l) / div.x * (j + .5), extent.b + (extent.t - extent.b) / div.y * (i + .5));
                 for(var k = 0; k < 10; ++k) {
                     z = math.add(math.pow(z, 3), c);
-                    if(math.abs(z) > 10) break;
+                    if(math.abs(math.re(z)) > 10 || math.abs(math.im(z)) > 10 || math.abs(z) > 10) break;
                 }
-                ctx[target].fillStyle = ((math.abs(z) < 10) ? '#000000' : '#ffffff');
+                ctx[target].fillStyle = ((math.abs(math.re(z)) < 10 || math.abs(math.im(z)) < 10) ? '#000000' : '#ffffff');
                 ctx[target].fillRect(size.x / div.x * j, size.y - size.y / div.y * (i + 1), size.x / div.x, size.y / div.y);
             }
         }
