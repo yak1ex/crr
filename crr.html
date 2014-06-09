@@ -92,7 +92,10 @@ window.onload = function() {
                 extent_updater();
                 update();
             }
-        } else if(e.which == 2) {
+        }
+    });
+    ele.dblclick(function(e) {
+        if(e.which == 1) {
             if(extents.length > 0) {
                 extent = extents.pop();
                 extent_updater();
