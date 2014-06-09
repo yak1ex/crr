@@ -40,6 +40,7 @@ window.onload = function() {
     var extents = [];
     var div = { x: 201, y: 201 };
     var square = 1;
+    var ticks = 100;
 
     var formulae = ['z^3+c', 'z^5+c', 'z^z+z^5+c', 'z^z+z^6+c','sin(z)+z^2+c', 'sin(z)+e^z+c'];
     var formula = math.compile(formulae[0]);
@@ -105,13 +106,19 @@ window.onload = function() {
     });
 
     var target = 0;
-    update = function() {
-        ele.eq(target).css('z-index', 1);
-        ctx[target].fillStyle = '#ffffff';
-        ctx[target].fillRect(0, 0, size.x, size.y);
-        for(var i = 0; i < div.y; ++i) {
-            for(var j = 0; j < div.x; ++j) {
-                var c = math.complex(0.5, 0);
+    var c = math.complex(0.5, 0);
+    var update = function(i, j) {
+        if(i === undefined) { i = 0; j = 0; }
+        var start = $.now();
+        if(i === 0 && j === 0) {
+            ele.eq(target).css('z-index', 1);
+            ctx[target].fillStyle = '#ffffff';
+            ctx[target].fillRect(0, 0, size.x, size.y);
+            ctx[target].strokeStyle = '#000000';
+            ctx[target].strokeRect(0, 0, size.x, size.y);
+        }
+        while(i < div.y) {
+            while(j < div.x) {
                 var z = math.complex(extent.l + (extent.r - extent.l) / div.x * (j + .5), extent.b + (extent.t - extent.b) / div.y * (i + .5));
                 for(var k = 0; k < 10; ++k) {
                     z = formula.eval({z: z, c: c });
@@ -119,7 +126,16 @@ window.onload = function() {
                 }
                 ctx[target].fillStyle = ((math.abs(math.re(z)) < 10 || math.abs(math.im(z)) < 10) ? '#000000' : '#ffffff');
                 ctx[target].fillRect(size.x / div.x * j, size.y - size.y / div.y * (i + 1), size.x / div.x, size.y / div.y);
+
+                ++j;
+                if($.now() - start > ticks) {
+                    ctx[target].strokeStyle = '#000000';
+                    ctx[target].strokeRect(0, 0, size.x, size.y);
+                    setTimeout(function() { update(i, j); }, 0);
+                    return;
+                }
             }
+            j = 0; ++i;
         }
         ctx[target].strokeStyle = '#000000';
         ctx[target].strokeRect(0, 0, size.x, size.y);
