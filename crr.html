@@ -1,24 +1,24 @@
 <html>
 <head>
 <style type="text/css">
-#canvas-container
+#crrlib-canvas-container
 {
 	position: relative;
 	top: 0;
 	left: 0;
 }
 
-.mycanvas
+.crrlib-mycanvas
 {
 	position: absolute;
 }
 
-#mycanvas0
+#crrlib-mycanvas0
 {
 	z-index: 0;
 }
 
-#mycanvas1
+#crrlib-mycanvas1
 {
 	z-index: 1;
 }
@@ -48,10 +48,10 @@ window.onload = function() {
     var update;
     var zoom;
 
-    var ele = $('.mycanvas').attr({ width: size.x, height: size.y });
+    var ele = $('.crrlib-mycanvas').attr({ width: size.x, height: size.y });
     var offset = ele.first().offset();
 
-    $('#canvas-container').width(size.x).height(size.y);
+    $('#crrlib-canvas-container').width(size.x).height(size.y);
 
     var getpos = function(e) { return {
         x: (extent.r - extent.l) / size.x * (e.pageX - offset.left) + extent.l,
@@ -62,10 +62,10 @@ window.onload = function() {
     var prec = function(val) { return math.format(val, { precision: 5}); };
     var coord = function(x, y) { return '(' + prec(x) + ',' + prec(y) + ')'; };
 //  var col = ['#000000','#0000ff','#ff0000','#ff00ff','#00ff00','#00ffff','#ffff00'];
-    var extent_updater = function() { $('#extent').text(coord(extent.l,extent.b)+'-'+coord(extent.r,extent.t)); };
+    var extent_updater = function() { $('#crrlib-extent').text(coord(extent.l,extent.b)+'-'+coord(extent.r,extent.t)); };
     extent_updater();
 
-    var curpos = $('#current');
+    var curpos = $('#crrlib-current');
     ele.mousemove(function(e) {
         var p = getpos(e);
         curpos.text(coord(p.x, p.y));
@@ -149,11 +149,13 @@ window.onload = function() {
 </script>
 </head>
 <body>
-<div id="canvas-container">
-<canvas class="mycanvas" id="mycanvas0"></canvas>
-<canvas class="mycanvas" id="mycanvas1"></canvas>
+<div id="crr-container">
+<div id="crrlib-canvas-container">
+<canvas class="crrlib-mycanvas" id="crrlib-mycanvas0"></canvas>
+<canvas class="crrlib-mycanvas" id="crrlib-mycanvas1"></canvas>
 </div>
-<p id="extent"></p>
-<p id="current"></p>
+<p id="crrlib-extent"></p>
+<p id="crrlib-current"></p>
+</div>
 </body>
 </html>
