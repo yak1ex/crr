@@ -1,3 +1,4 @@
+// TODO: add HTML elements by myself
 // TODO: onetime / interval
 // TODO: clear when interval
 // TODO: complex / coordinate => (l,b)-(r,t)
@@ -42,17 +43,15 @@ function crrlib()
         var extent_updater = function() { $('#crrlib-extent').text(coord(extent.l,extent.b)+'-'+coord(extent.r,extent.t)); };
         extent_updater();
 
+        ele = $('.crrlib-mycanvas').attr({ width: size.x, height: size.y });
+        var offset = ele.first().offset();
         var getpos = function(e) { return {
             x: (extent.r - extent.l) / size.x * (e.pageX - offset.left) + extent.l,
             y: (extent.b - extent.t) / size.y * (e.pageY - offset.top) + extent.t
         };};
-
-        ele = $('.crrlib-mycanvas').attr({ width: size.x, height: size.y });
-        var offset = ele.first().offset();
+        ctx = $.map(ele, function (ele) { return ele.getContext('2d'); });
 
         $('#crrlib-canvas-container').width(size.x).height(size.y);
-
-        ctx = $.map(ele, function (ele) { return ele.getContext('2d'); });
 
         // event handlers
         var curpos = $('#crrlib-current');
