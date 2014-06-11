@@ -24,14 +24,22 @@ function crrlib()
     var ele, ctx; // [zero, one]
     var update; // function(i, j)
     var picker; // function(i, j)
+    var set_extent; // function(extent)
 
     var setup_option = function(opt) {
         $.extend(option, opt);
-        extent = option.extent;
-        div = {
-            complex: option.div,
-            integer: { x: extent.r - extent.l, y: extent.t - extent.b }
+        // for integer, set_extent() handles div
+        if(option.type === 'complex') {
+            div = option.div;
+        }
+        set_extent = {
+            complex: function(e) { extent = e; },
+            integer: function(e) {
+                extent = e;
+                div = { x: extent.r - extent.l, y: extent.t - extent.b }
+            },
         }[option.type];
+        set_extent(option.extent);
         picker = {
             complex: function(i, j) {
                 return math.complex(
@@ -112,7 +120,7 @@ function crrlib()
                     if(math.square(e1.pageX - e2.pageX)+math.square(e1.pageY - e2.pageY) > 100) {
                         var p1 = getpos(e1), p2 = getpos(e2);
                         extents.push(extent);
-                        extent = { l: math.min(p1.x, p2.x), r: math.max(p1.x, p2.x), b: math.min(p1.y, p2.y), t: math.max(p1.y, p2.y) };
+                        set_extent({ l: math.min(p1.x, p2.x), r: math.max(p1.x, p2.x), b: math.min(p1.y, p2.y), t: math.max(p1.y, p2.y) });
                         extent_updater();
                         update();
                     }
@@ -121,7 +129,7 @@ function crrlib()
             ele.dblclick(function(e) {
                 if(e.which == 1) {
                     if(extents.length > 0) {
-                        extent = extents.pop();
+                        set_extent(extents.pop());
                         extent_updater();
                         update();
                     }
