@@ -1,4 +1,3 @@
-// TODO: add HTML elements by myself
 // TODO: onetime / interval
 // TODO: clear when interval
 // TODO: complex / coordinate => (l,b)-(r,t)
@@ -31,7 +30,16 @@ function crrlib()
         ticks = option.ticks;
     }
 
-    var setup = function() {
+    var setup = function(container) {
+
+        $(container).append(
+            '<div id="crrlib-canvas-container">\n' +
+            '<canvas class="crrlib-mycanvas" id="crrlib-mycanvas0"></canvas>\n' +
+            '<canvas class="crrlib-mycanvas" id="crrlib-mycanvas1"></canvas>\n' +
+            '</div>\n' +
+            '<p id="crrlib-extent"></p>\n' +
+            '<p id="crrlib-current"></p>\n'
+        );
 
         // state
         var extents = [];
@@ -137,9 +145,9 @@ function crrlib()
     };
 
     return {
-        init: function(opt) {
+        init: function(container, opt) {
             setup_option(opt);
-            setup();
+            setup(container);
         },
         run: function() {
             update();

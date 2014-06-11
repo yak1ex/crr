@@ -14,7 +14,7 @@ window.onload = function() {
     var formula = math.compile(formulae[0]);
     var c = math.complex(0.5, 0);
 
-    crr.init({
+    crr.init('#crr-container', {
         cell: function(z) {
             for(var k = 0; k < 10; ++k) {
                 z = formula.eval({z: z, c: c });
@@ -29,13 +29,6 @@ window.onload = function() {
 </script>
 </head>
 <body>
-<div id="crr-container">
-<div id="crrlib-canvas-container">
-<canvas class="crrlib-mycanvas" id="crrlib-mycanvas0"></canvas>
-<canvas class="crrlib-mycanvas" id="crrlib-mycanvas1"></canvas>
-</div>
-<p id="crrlib-extent"></p>
-<p id="crrlib-current"></p>
-</div>
+<div id="crr-container"></div>
 </body>
 </html>
