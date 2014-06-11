@@ -1,0 +1,41 @@
+<html>
+<head>
+<link rel="stylesheet" href="crrlib.css" type="text/css" />
+<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/0.22.0/math.min.js"></script>
+<script src="crrlib.js"></script>
+<script type="text/javascript">
+window.onload = function() {
+    var math = mathjs();
+    var crr = crrlib();
+
+    var formulae = ['z^3+c', 'z^5+c', 'z^z+z^5+c', 'z^z+z^6+c','sin(z)+z^2+c', 'sin(z)+e^z+c'];
+    var formula = math.compile(formulae[0]);
+    var c = math.complex(0.5, 0);
+
+    crr.init({
+        cell: function(z) {
+            for(var k = 0; k < 10; ++k) {
+                z = formula.eval({z: z, c: c });
+                if(math.abs(math.re(z)) > 10 || math.abs(math.im(z)) > 10 || math.abs(z) > 10) break;
+            }
+            return { fill: ((math.abs(math.re(z)) < 10 || math.abs(math.im(z)) < 10) ? '#000000' : '#ffffff') }
+        }
+    });
+    crr.run();
+
+}
+</script>
+</head>
+<body>
+<div id="crr-container">
+<div id="crrlib-canvas-container">
+<canvas class="crrlib-mycanvas" id="crrlib-mycanvas0"></canvas>
+<canvas class="crrlib-mycanvas" id="crrlib-mycanvas1"></canvas>
+</div>
+<p id="crrlib-extent"></p>
+<p id="crrlib-current"></p>
+</div>
+</body>
+</html>
