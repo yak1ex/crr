@@ -3,6 +3,7 @@
 // TODO: complex / coordinate => (l,b)-(r,t)
 // TODO: show zoom in hint
 // TODO: busy / cancel in busy
+// TODO: consider zoom in integer
 
 function crrlib()
 {
@@ -10,6 +11,7 @@ function crrlib()
 
     var option = {
         size: { x: 101, y: 101 },
+        type: 'complex',
         extent: { l: -10, b: -10, t: 10, r: 10 },
         div: { x: 201, y: 201 },
         zoom: true,
@@ -17,17 +19,33 @@ function crrlib()
         ticks: 100,
     };
     // for alias
-    var extent, div, size, ticks;
+    var extent, div, size, ticks, w, h, s;
     // forward declaration
     var ele, ctx; // [zero, one]
     var update; // function(i, j)
+    var picker; // function(i, j)
 
     var setup_option = function(opt) {
         $.extend(option, opt);
         extent = option.extent;
-        div = option.div;
+        div = {
+            complex: option.div,
+            integer: { x: extent.r - extent.l, y: extent.t - extent.b }
+        }[option.type];
+        picker = {
+            complex: function(i, j) {
+                return math.complex(
+                    extent.l + (extent.r - extent.l) / div.x * (j + .5),
+                    extent.b + (extent.t - extent.b) / div.y * (i + .5)
+                );
+            },
+            integer: function(i, j) { return [i, j]; },
+        }[option.type];
         size = option.size;
         ticks = option.ticks;
+        w = option.extent.r - option.extent.l;
+        h = option.extent.t - option.extent.b;
+        s = w * h;
     }
 
     var setup = function(container) {
@@ -54,10 +72,16 @@ function crrlib()
 
         ele = $('.crrlib-mycanvas').attr({ width: size.x, height: size.y });
         var offset = ele.first().offset();
-        var getpos = function(e) { return {
-            x: (extent.r - extent.l) / size.x * (e.pageX - offset.left) + extent.l,
-            y: (extent.b - extent.t) / size.y * (e.pageY - offset.top) + extent.t
-        };};
+        var getpos = {
+            complex: function(e) { return {
+                x: (extent.r - extent.l) / size.x * (e.pageX - offset.left) + extent.l,
+                y: (extent.b - extent.t) / size.y * (e.pageY - offset.top) + extent.t
+            }},
+            integer: function(e) { return {
+                x: Math.ceil((extent.r - extent.l) / size.x * (e.pageX - offset.left)) + extent.l,
+                y: Math.ceil((extent.b - extent.t) / size.y * (e.pageY - offset.top)) + extent.t
+            }},
+        }[option.type];
         ctx = $.map(ele, function (ele) { return ele.getContext('2d'); });
 
         $('#crrlib-canvas-container').width(size.x).height(size.y);
@@ -119,12 +143,19 @@ function crrlib()
         }
         while(i < div.y) {
             while(j < div.x) {
-                var z = math.complex(extent.l + (extent.r - extent.l) / div.x * (j + .5), extent.b + (extent.t - extent.b) / div.y * (i + .5));
-                var ret = option.cell(z);
+                var ret = option.cell(picker(i, j));
 
                 // TODO: Handle stroke
-                ctx[target].fillStyle = ret.fill; // FIXME: Check existence
-                ctx[target].fillRect(size.x / div.x * j, size.y - size.y / div.y * (i + 1), size.x / div.x, size.y / div.y);
+                if(ret) {
+                    if('fill' in ret) {
+                        ctx[target].fillStyle = ret.fill;
+                        ctx[target].fillRect(size.x / div.x * j, size.y - size.y / div.y * (i + 1), size.x / div.x, size.y / div.y);
+                    }
+                    if('stroke' in ret) {
+                        ctx[target].strokeStyle = ret.stroke;
+                        ctx[target].strokeRect(size.x / div.x * j, size.y - size.y / div.y * (i + 1), size.x / div.x, size.y / div.y);
+                    }
+                }
 
                 ++j;
                 if($.now() - start > ticks) {
@@ -144,6 +175,43 @@ function crrlib()
 //      setTimeout(update, 1000);
     };
 
+// Helper factories
+    var factories = {
+        idx1: function() {
+            return function(x,y) {
+                return y*w+x;
+            };
+        },
+        adj4: function(opt) {
+            if(opt && opt.torus) {
+                return function(x,y) {
+                    return [[0,h],[0,s-h],[1,0],[w-1,0]].
+                        map(function(d) { return (y*w+(x+d[0])%w+d[1])%s; });
+                };
+            } else {
+                return function(x,y) {
+                    return [[0,1],[0,-1],[1,0],[-1,0]].
+                        filter(function(d) { return 0<=d[0]+x&&d[0]+x<w&&0<=d[1]+y&&d[1]+y<h; }).
+                        map(function(d) { return (y+d[1])*w+x+d[0]; });
+                };
+            }
+        },
+        adj8: function(opt) {
+            if(opt && opt.torus) {
+                return function(x,y) {
+                    return [[0,h],[0,s-h],[1,0],[w-1,0],[1,h],[1,s-h],[w-1,h],[w-1,s-h]].
+                        map(function(d) { return (y*w+(x+d[0])%w+d[1])%s; });
+                };
+            } else {
+                return function(x,y) {
+                    return [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]].
+                        filter(function(d) { return 0<=d[0]+x&&d[0]+x<w&&0<=d[1]+y&&d[1]+y<h; }).
+                        map(function(d) { return (y+d[1])*w+x+d[0]; });
+                };
+            }
+        }
+    };
+
     return {
         init: function(container, opt) {
             setup_option(opt);
@@ -151,6 +219,11 @@ function crrlib()
         },
         run: function() {
             update();
+        },
+        make_helper: function(key, opt) {
+            if(key in factories) {
+                return factories[key](opt);
+            } else throw "Unknown helper type '" + key + "' is specified";
         },
     };
 }
