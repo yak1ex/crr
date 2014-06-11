@@ -13,7 +13,7 @@ function crrlib()
         size: { x: 101, y: 101 },
         extent: { l: -10, b: -10, t: 10, r: 10 },
         div: { x: 201, y: 201 },
-        square: 1,
+        square_zoom: true,
         ticks: 100,
     };
     // for alias
@@ -34,7 +34,7 @@ function crrlib()
 
         // state
         var extents = [];
-        var zoom;
+        var zoom_anchor;
 
         // helper
         var prec = function(val) { return math.format(val, { precision: 5}); };
@@ -61,19 +61,19 @@ function crrlib()
         });
         ele.mousedown(function(e) {
             if(e.which == 1) {
-                zoom = { pageX: e.pageX, pageY: e.pageY };
+                zoom_anchor = { pageX: e.pageX, pageY: e.pageY };
             }
         });
         ele.mouseup(function(e) {
             if(e.which == 1) {
                 var e1, e2;
-                if(option.square) {
-                    e1 = { pageX: math.min(e.pageX, zoom.pageX), pageY: math.min(e.pageY, zoom.pageY) };
-                    var len = math.max(math.max(e.pageX, zoom.pageX) - e1.pageX, math.max(e.pageY, zoom.pageY) - e1.pageY);
+                if(option.square_zoom) {
+                    e1 = { pageX: math.min(e.pageX, zoom_anchor.pageX), pageY: math.min(e.pageY, zoom_anchor.pageY) };
+                    var len = math.max(math.max(e.pageX, zoom_anchor.pageX) - e1.pageX, math.max(e.pageY, zoom_anchor.pageY) - e1.pageY);
                     if(e1.pageX + len - offset.left > size.x || e1.pageY + len - offset.top > size.y) return;
                     e2 = { pageX: e1.pageX + len, pageY: e1.pageY + len };
                 } else {
-                    e1 = e; e2 = zoom;
+                    e1 = e; e2 = zoom_anchor;
                 }
                 if(math.square(e1.pageX - e2.pageX)+math.square(e1.pageY - e2.pageY) > 100) {
                     var p1 = getpos(e1), p2 = getpos(e2);
