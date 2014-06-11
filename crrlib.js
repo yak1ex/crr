@@ -187,12 +187,14 @@ function crrlib()
     var factories = {
         idx1: function() {
             return function(x,y) {
+                if(y === undefined) { y = x[1]; x = x[0]; }
                 return y*w+x;
             };
         },
         adj4: function(opt) {
             if(opt && opt.torus) {
                 return function(x,y) {
+                    if(y === undefined) { y = x[1]; x = x[0]; }
                     return [[0,h],[0,s-h],[1,0],[w-1,0]].
                         map(function(d) { return (y*w+(x+d[0])%w+d[1])%s; });
                 };
@@ -207,11 +209,13 @@ function crrlib()
         adj8: function(opt) {
             if(opt && opt.torus) {
                 return function(x,y) {
+                    if(y === undefined) { y = x[1]; x = x[0]; }
                     return [[0,h],[0,s-h],[1,0],[w-1,0],[1,h],[1,s-h],[w-1,h],[w-1,s-h]].
                         map(function(d) { return (y*w+(x+d[0])%w+d[1])%s; });
                 };
             } else {
                 return function(x,y) {
+                    if(y === undefined) { y = x[1]; x = x[0]; }
                     return [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]].
                         filter(function(d) { return 0<=d[0]+x&&d[0]+x<w&&0<=d[1]+y&&d[1]+y<h; }).
                         map(function(d) { return (y+d[1])*w+x+d[0]; });
