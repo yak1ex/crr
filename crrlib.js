@@ -13,6 +13,7 @@ function crrlib()
         size: { x: 101, y: 101 },
         extent: { l: -10, b: -10, t: 10, r: 10 },
         div: { x: 201, y: 201 },
+        zoom: true,
         square_zoom: true,
         ticks: 100,
     };
@@ -59,40 +60,42 @@ function crrlib()
             var p = getpos(e);
             curpos.text(coord(p.x, p.y));
         });
-        ele.mousedown(function(e) {
-            if(e.which == 1) {
-                zoom_anchor = { pageX: e.pageX, pageY: e.pageY };
-            }
-        });
-        ele.mouseup(function(e) {
-            if(e.which == 1) {
-                var e1, e2;
-                if(option.square_zoom) {
-                    e1 = { pageX: math.min(e.pageX, zoom_anchor.pageX), pageY: math.min(e.pageY, zoom_anchor.pageY) };
-                    var len = math.max(math.max(e.pageX, zoom_anchor.pageX) - e1.pageX, math.max(e.pageY, zoom_anchor.pageY) - e1.pageY);
-                    if(e1.pageX + len - offset.left > size.x || e1.pageY + len - offset.top > size.y) return;
-                    e2 = { pageX: e1.pageX + len, pageY: e1.pageY + len };
-                } else {
-                    e1 = e; e2 = zoom_anchor;
+        if(option.zoom) {
+            ele.mousedown(function(e) {
+                if(e.which == 1) {
+                    zoom_anchor = { pageX: e.pageX, pageY: e.pageY };
                 }
-                if(math.square(e1.pageX - e2.pageX)+math.square(e1.pageY - e2.pageY) > 100) {
-                    var p1 = getpos(e1), p2 = getpos(e2);
-                    extents.push(extent);
-                    extent = { l: math.min(p1.x, p2.x), r: math.max(p1.x, p2.x), b: math.min(p1.y, p2.y), t: math.max(p1.y, p2.y) };
-                    extent_updater();
-                    update();
+            });
+            ele.mouseup(function(e) {
+                if(e.which == 1) {
+                    var e1, e2;
+                    if(option.square_zoom) {
+                        e1 = { pageX: math.min(e.pageX, zoom_anchor.pageX), pageY: math.min(e.pageY, zoom_anchor.pageY) };
+                        var len = math.max(math.max(e.pageX, zoom_anchor.pageX) - e1.pageX, math.max(e.pageY, zoom_anchor.pageY) - e1.pageY);
+                        if(e1.pageX + len - offset.left > size.x || e1.pageY + len - offset.top > size.y) return;
+                        e2 = { pageX: e1.pageX + len, pageY: e1.pageY + len };
+                    } else {
+                        e1 = e; e2 = zoom_anchor;
+                    }
+                    if(math.square(e1.pageX - e2.pageX)+math.square(e1.pageY - e2.pageY) > 100) {
+                        var p1 = getpos(e1), p2 = getpos(e2);
+                        extents.push(extent);
+                        extent = { l: math.min(p1.x, p2.x), r: math.max(p1.x, p2.x), b: math.min(p1.y, p2.y), t: math.max(p1.y, p2.y) };
+                        extent_updater();
+                        update();
+                    }
                 }
-            }
-        });
-        ele.dblclick(function(e) {
-            if(e.which == 1) {
-                if(extents.length > 0) {
-                    extent = extents.pop();
-                    extent_updater();
-                     update();
+            });
+            ele.dblclick(function(e) {
+                if(e.which == 1) {
+                    if(extents.length > 0) {
+                        extent = extents.pop();
+                        extent_updater();
+                         update();
+                    }
                 }
-            }
-        });
+            });
+        }
     };
 
     var target = 0;
