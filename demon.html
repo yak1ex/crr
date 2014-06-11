@@ -9,33 +9,29 @@
 window.onload = function() {
     var math = mathjs();
     var crr = crrlib();
-
-    var formulae = ['z^3+c', 'z^5+c', 'z^z+z^5+c', 'z^z+z^6+c','sin(z)+z^2+c', 'sin(z)+e^z+c'];
-    var formula = math.compile(formulae[0]);
-    var c = math.complex(0.5, 0);
-
-    crr.init({
+    var idx1 = crr.make_helper('idx1');
+    var table_old = [], table_new = [];
+    var colors = ['#000000','#0000ff','#ff0000', '#ff00ff', '#00ff00', '#00ffff', '#ffff00', '#ffffff'];
+    crr.init('#crr-container', {
+        type: 'integer',
+        extent: { l: 0, b: 0, t: 100, r: 100 },
+        size: { x: 100, y: 100 },
         cell: function(z) {
-            for(var k = 0; k < 10; ++k) {
-                z = formula.eval({z: z, c: c });
-                if(math.abs(math.re(z)) > 10 || math.abs(math.im(z)) > 10 || math.abs(z) > 10) break;
-            }
-            return { fill: ((math.abs(math.re(z)) < 10 || math.abs(math.im(z)) < 10) ? '#000000' : '#ffffff') }
+            return { fill: colors[table_new[idx1(z)]] }
         }
     });
+    for(var j = 0; j < 100; ++j) {
+        for(var i = 0; i < 100; ++i) {
+            table_new[idx1(i,j)] = Math.ceil(Math.random() * colors.length);
+        }
+    }
+
     crr.run();
 
 }
 </script>
 </head>
 <body>
-<div id="crr-container">
-<div id="crrlib-canvas-container">
-<canvas class="crrlib-mycanvas" id="crrlib-mycanvas0"></canvas>
-<canvas class="crrlib-mycanvas" id="crrlib-mycanvas1"></canvas>
-</div>
-<p id="crrlib-extent"></p>
-<p id="crrlib-current"></p>
-</div>
+<div id="crr-container"></div>
 </body>
 </html>
