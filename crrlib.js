@@ -123,7 +123,7 @@ function crrlib()
                     if(extents.length > 0) {
                         extent = extents.pop();
                         extent_updater();
-                         update();
+                        update();
                     }
                 }
             });
