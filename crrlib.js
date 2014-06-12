@@ -141,7 +141,7 @@ function crrlib()
     var target = 0;
     var last_entered;
     update = function(i, j) {
-        if(i === undefined) { i = 0; j = 0; }
+        if(i === void 0) { i = 0; j = 0; }
         var start = $.now();
         if(i === 0 && j === 0) {
             last_entered = start;
@@ -198,14 +198,14 @@ function crrlib()
     var factories = {
         idx1: function() {
             return function(x,y) {
-                if(y === undefined) { y = x[1]; x = x[0]; }
+                if(y === void 0) { y = x[1]; x = x[0]; }
                 return y*w+x;
             };
         },
         adj4: function(opt) {
             if('torus' in opt && opt.torus) {
                 return function(x,y) {
-                    if(y === undefined) { y = x[1]; x = x[0]; }
+                    if(y === void 0) { y = x[1]; x = x[0]; }
                     return [[0,w],[0,s-w],[1,0],[w-1,0]].
                         map(function(d) { return (y*w+(x+d[0])%w+d[1])%s; });
                 };
@@ -220,13 +220,13 @@ function crrlib()
         adj8: function(opt) {
             if('torus' in opt && opt.torus) {
                 return function(x,y) {
-                    if(y === undefined) { y = x[1]; x = x[0]; }
+                    if(y === void 0) { y = x[1]; x = x[0]; }
                     return [[0,w],[0,s-w],[1,0],[w-1,0],[1,w],[1,s-w],[w-1,w],[w-1,s-w]].
                         map(function(d) { return (y*w+(x+d[0])%w+d[1])%s; });
                 };
             } else {
                 return function(x,y) {
-                    if(y === undefined) { y = x[1]; x = x[0]; }
+                    if(y === void 0) { y = x[1]; x = x[0]; }
                     return [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]].
                         filter(function(d) { return 0<=d[0]+x&&d[0]+x<w&&0<=d[1]+y&&d[1]+y<h; }).
                         map(function(d) { return (y+d[1])*w+x+d[0]; });
