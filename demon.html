@@ -15,7 +15,7 @@ window.onload = function() {
     var crr = crrlib();
     var idx1 = crr.make_helper('idx1'), adj = crr.make_helper('adj4', { torus: true });
     var table_old = [], table_new = [];
-    var colors = ['#000000','#0000ff','#ff0000', '#ff00ff', '#00ff00', '#00ffff', '#ffff00', '#ffffff'];
+    var colors = crr.make_helper('colors')(20);
     var counter = 0;
     crr.init('#crr-container', {
         type: 'integer',
