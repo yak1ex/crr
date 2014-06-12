@@ -1,6 +1,5 @@
 // TODO: onetime / interval
 // TODO: clear when interval
-// TODO: complex / coordinate => (l,b)-(r,t)
 // TODO: show zoom in hint
 // TODO: busy / cancel in busy
 // TODO: consider zoom in integer
@@ -153,7 +152,6 @@ function crrlib()
             while(j < div.x) {
                 var ret = option.cell(picker(i, j));
 
-                // TODO: Handle stroke
                 if(ret) {
                     if('fill' in ret) {
                         ctx[target].fillStyle = ret.fill;
