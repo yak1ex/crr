@@ -206,7 +206,7 @@ function crrlib()
             if('torus' in opt && opt.torus) {
                 return function(x,y) {
                     if(y === undefined) { y = x[1]; x = x[0]; }
-                    return [[0,h],[0,s-h],[1,0],[w-1,0]].
+                    return [[0,w],[0,s-w],[1,0],[w-1,0]].
                         map(function(d) { return (y*w+(x+d[0])%w+d[1])%s; });
                 };
             } else {
@@ -221,7 +221,7 @@ function crrlib()
             if('torus' in opt && opt.torus) {
                 return function(x,y) {
                     if(y === undefined) { y = x[1]; x = x[0]; }
-                    return [[0,h],[0,s-h],[1,0],[w-1,0],[1,h],[1,s-h],[w-1,h],[w-1,s-h]].
+                    return [[0,w],[0,s-w],[1,0],[w-1,0],[1,w],[1,s-w],[w-1,w],[w-1,s-w]].
                         map(function(d) { return (y*w+(x+d[0])%w+d[1])%s; });
                 };
             } else {
