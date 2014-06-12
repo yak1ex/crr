@@ -1,4 +1,3 @@
-// TODO: onetime / interval
 // TODO: clear when interval
 // TODO: show zoom in hint
 // TODO: busy / cancel in busy
@@ -138,47 +137,59 @@ function crrlib()
     };
 
     var target = 0;
+    var last_entered;
     update = function(i, j) {
         if(i === undefined) { i = 0; j = 0; }
         var start = $.now();
         if(i === 0 && j === 0) {
-            ele.eq(target).css('z-index', 1);
+            last_entered = start;
+            if(!('interval' in option)) { ele.eq(target).css('z-index', 1); }
             ctx[target].fillStyle = '#ffffff';
             ctx[target].fillRect(0, 0, size.x, size.y);
             ctx[target].strokeStyle = '#000000';
             ctx[target].strokeRect(0, 0, size.x, size.y);
-        }
-        while(i < div.y) {
-            while(j < div.x) {
-                var ret = option.cell(picker(i, j));
-
-                if(ret) {
-                    if('fill' in ret) {
-                        ctx[target].fillStyle = ret.fill;
-                        ctx[target].fillRect(size.x / div.x * j, size.y - size.y / div.y * (i + 1), size.x / div.x, size.y / div.y);
-                    }
-                    if('stroke' in ret) {
-                        ctx[target].strokeStyle = ret.stroke;
-                        ctx[target].strokeRect(size.x / div.x * j, size.y - size.y / div.y * (i + 1), size.x / div.x, size.y / div.y);
-                    }
-                }
-
-                ++j;
-                if($.now() - start > ticks) {
-                    ctx[target].strokeStyle = '#000000';
-                    ctx[target].strokeRect(0, 0, size.x, size.y);
-                    setTimeout(function() { update(i, j); }, 0);
-                    return;
-                }
+            if('enter' in option) {
+                option.enter();
             }
-            j = 0; ++i;
+        }
+        if('cell' in option) {
+            while(i < div.y) {
+                while(j < div.x) {
+                    var ret = option.cell(picker(i, j));
+
+                    if(ret) {
+                        if('fill' in ret) {
+                            ctx[target].fillStyle = ret.fill;
+                            ctx[target].fillRect(size.x / div.x * j, size.y - size.y / div.y * (i + 1), size.x / div.x, size.y / div.y);
+                        }
+                        if('stroke' in ret) {
+                            ctx[target].strokeStyle = ret.stroke;
+                            ctx[target].strokeRect(size.x / div.x * j, size.y - size.y / div.y * (i + 1), size.x / div.x, size.y / div.y);
+                        }
+                    }
+
+                    ++j;
+                    if($.now() - start > ticks) {
+                        ctx[target].strokeStyle = '#000000';
+                        ctx[target].strokeRect(0, 0, size.x, size.y);
+                        setTimeout(function() { update(i, j); }, 0);
+                        return;
+                    }
+                }
+                j = 0; ++i;
+            }
+        }
+        if('leave' in option) {
+            option.leave();
         }
         ctx[target].strokeStyle = '#000000';
         ctx[target].strokeRect(0, 0, size.x, size.y);
-//	ele.eq(  target).css('z-index', 1);
-//	ele.eq(1-target).css('z-index', 0);
-//      target = 1 - target;
-//      setTimeout(update, 1000);
+        if('interval' in option) {
+            ele.eq(  target).css('z-index', 1);
+            ele.eq(1-target).css('z-index', 0);
+            target = 1 - target;
+            setTimeout(update, Math.max(0, option.interval - $.now() + last_entered));
+        }
     };
 
 // Helper factories
