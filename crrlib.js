@@ -2,6 +2,8 @@
 // TODO: show zoom in hint
 // TODO: busy / cancel in busy
 // TODO: consider zoom in integer
+// TODO: iteration counter in lib
+// TODO: stop/restart interval to reconfigure
 
 function crrlib()
 {
