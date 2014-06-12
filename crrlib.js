@@ -171,7 +171,7 @@ function crrlib()
                     }
 
                     ++j;
-                    if($.now() - start > ticks) {
+                    if(!('interval' in option) && $.now() - start > ticks) {
                         ctx[target].strokeStyle = '#000000';
                         ctx[target].strokeRect(0, 0, size.x, size.y);
                         setTimeout(function() { update(i, j); }, 0);
