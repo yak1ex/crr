@@ -201,7 +201,7 @@ function crrlib()
             };
         },
         adj4: function(opt) {
-            if(opt && opt.torus) {
+            if('torus' in opt && opt.torus) {
                 return function(x,y) {
                     if(y === undefined) { y = x[1]; x = x[0]; }
                     return [[0,h],[0,s-h],[1,0],[w-1,0]].
@@ -216,7 +216,7 @@ function crrlib()
             }
         },
         adj8: function(opt) {
-            if(opt && opt.torus) {
+            if('torus' in opt && opt.torus) {
                 return function(x,y) {
                     if(y === undefined) { y = x[1]; x = x[0]; }
                     return [[0,h],[0,s-h],[1,0],[w-1,0],[1,h],[1,s-h],[w-1,h],[w-1,s-h]].
