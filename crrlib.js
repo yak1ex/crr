@@ -232,7 +232,36 @@ function crrlib()
                         map(function(d) { return (y+d[1])*w+x+d[0]; });
                 };
             }
-        }
+        },
+        colors: function() { // currently no option
+            var f=Math.floor;
+            function hcolor(h) {
+                var H=f(h/60), rgb=[];
+                rgb[f((H+4)%6/2)]=0; rgb[f((H+1)%6/2)]=1; rgb[2-(H+1)%3]=1-Math.abs(h/60%2-1);
+                return 'rgb('+rgb.map(function(x){return f(x*255+.5);}).join(',')+')';
+            }
+            function step(n) {
+                function iscoprime(x,y)
+                {
+                    function gcd(x,y) {
+                        return x%y===0?y:gcd(y,x%y);
+                    }
+                    return gcd(x,y)===1;
+                }
+                var N=f(n/2);
+                if(iscoprime(n,N)) return N;
+                for(var i=1;i<N;i++) {
+                    if(iscoprime(n,N-i)) return N-i;
+                    if(iscoprime(n,N+i)) return N+i;
+                }
+            }
+            return function(n) {
+                if(n===1) return [hcolor(0)];
+                var h=0,s=step(n),r=[];
+                for(var i=0;i<n;++i) { r.push(h/n*360); h=(h+s)%n; }
+                return r.map(hcolor);
+            };
+        },
     };
 
     return {
