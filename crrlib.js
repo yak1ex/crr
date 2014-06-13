@@ -1,5 +1,4 @@
 // TODO: clear when interval
-// TODO: show zoom in hint
 // TODO: busy / cancel in busy
 // TODO: consider zoom in integer
 // TODO: iteration counter in lib
@@ -62,10 +61,12 @@ function crrlib()
             '<div id="crrlib-canvas-container">\n' +
             '<canvas class="crrlib-mycanvas" id="crrlib-mycanvas0"></canvas>\n' +
             '<canvas class="crrlib-mycanvas" id="crrlib-mycanvas1"></canvas>\n' +
+            '<canvas class="crrlib-mycanvas" id="crrlib-mycanvas-guide"></canvas>\n' +
             '</div>\n' +
             '<p id="crrlib-extent"></p>\n' +
             '<p id="crrlib-current"></p>\n'
         );
+        var guide = 2;
 
         // state
         var extents = [];
@@ -91,14 +92,43 @@ function crrlib()
             }},
         }[option.type];
         ctx = $.map(ele, function (ele) { return ele.getContext('2d'); });
+        ctx[guide].strokeStyle = '#ff0000';
+        ctx[guide].globalCompositeOperation = 'copy';
 
         $('#crrlib-canvas-container').width(size.x).height(size.y);
 
         // event handlers
         var curpos = $('#crrlib-current');
+        function zoom_extent(e) {
+            if(option.square_zoom) {
+                var len = Math.max(Math.abs(e.pageX - zoom_anchor.pageX), Math.abs(e.pageY - zoom_anchor.pageY));
+                e1 = {
+                    pageX: zoom_anchor.pageX - (e.pageX < zoom_anchor.pageX ? len : 0),
+                    pageY: zoom_anchor.pageY - (e.pageY < zoom_anchor.pageY ? len : 0)
+                };
+                e2 = {
+                    pageX: zoom_anchor.pageX + (e.pageX > zoom_anchor.pageX ? len : 0),
+                    pageY: zoom_anchor.pageY + (e.pageY > zoom_anchor.pageY ? len : 0)
+                };
+	        if(e1.pageX < offset.left || e2.pageX > size.x + offset.left || e1.pageY < offset.top || e2.pageY > size.y + offset.top) return;
+            } else {
+                // TODO: maybe normalization is better
+                e1 = e; e2 = zoom_anchor;
+            }
+            if(math.square(e1.pageX - e2.pageX)+math.square(e1.pageY - e2.pageY) <= 100) return;
+            return [e1, e2];
+        }
         ele.mousemove(function(e) {
             var p = getpos(e);
             curpos.text(coord(p.x, p.y));
+            if(option.zoom && zoom_anchor !== void 0) {
+                var new_zoom = zoom_extent(e);
+                if(new_zoom !== void 0) {
+                    ctx[guide].strokeRect(Math.min(e1.pageX, e2.pageX) - offset.left, Math.min(e1.pageY, e2.pageY) - offset.top, Math.abs(e2.pageX - e1.pageX), Math.abs(e2.pageY - e1.pageY));
+                } else {
+                    ctx[guide].clearRect(0, 0, size.x, size.y);
+                }
+            }
         });
         if(option.zoom) {
             ele.mousedown(function(e) {
@@ -108,15 +138,11 @@ function crrlib()
             });
             ele.mouseup(function(e) {
                 if(e.which == 1) {
-                    var e1, e2;
-                    if(option.square_zoom) {
-                        e1 = { pageX: math.min(e.pageX, zoom_anchor.pageX), pageY: math.min(e.pageY, zoom_anchor.pageY) };
-                        var len = math.max(math.max(e.pageX, zoom_anchor.pageX) - e1.pageX, math.max(e.pageY, zoom_anchor.pageY) - e1.pageY);
-                        if(e1.pageX + len - offset.left > size.x || e1.pageY + len - offset.top > size.y) return;
-                        e2 = { pageX: e1.pageX + len, pageY: e1.pageY + len };
-                    } else {
-                        e1 = e; e2 = zoom_anchor;
-                    }
+                    ctx[guide].clearRect(0, 0, size.x, size.y);
+                    var new_zoom = zoom_extent(e);
+                    zoom_anchor = void 0;
+                    if(new_zoom === void 0) return;
+                    var e1 = new_zoom[0], e2 = new_zoom[1];
                     if(math.square(e1.pageX - e2.pageX)+math.square(e1.pageY - e2.pageY) > 100) {
                         var p1 = getpos(e1), p2 = getpos(e2);
                         extents.push(extent);
@@ -124,6 +150,17 @@ function crrlib()
                         extent_updater();
                         update();
                     }
+                }
+            });
+            $(window).mouseup(function(e) {
+                if(e.which == 1) {
+                    ctx[guide].clearRect(0, 0, size.x, size.y);
+                    zoom_anchor = void 0;
+                }
+            });
+            ele.mouseleave(function(e) {
+                if(zoom_anchor !== void 0) {
+                    ctx[guide].clearRect(0, 0, size.x, size.y);
                 }
             });
             ele.dblclick(function(e) {
