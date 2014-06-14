@@ -1,6 +1,44 @@
 洋書
 ====
 
+The Armchair Universe
+---------------------
+
+Dewdney, A. K., The Armchair Universe: An exploration of Computer Worlds, New York, W.H. Freeman and Company, 1988, ISBN 0-7167-1939-8
+
+- WORLD ONE: Infinite Graphics
+  - The Mandelbrot Set
+  - Wallpaper for the Mind
+- WORLD TWO: Mathemagadgets
+  - Analog Gadgets
+  - Gadgets Revisited
+  - Golomb Rulers
+  - Hypercubes
+- WORLD THREE: Artificial Intelligence and Artificial Insanity
+  - Conversations With RACTER
+  - Facebender
+  - Perceptron Misperceptions
+  - A Checkers Program Than Never Loses?
+  - Automated Magic
+- WORLD FOUR: Life in Automata
+  - One-Dimensional Computers
+  - Three-Dimensional Life
+  - Busy Beavers
+- WORLD FIVE: Puzzles and Wordplay
+  - Bill's Baffling Burr, Coffin's Cornucopia, and Engel's Enigma
+  - The Towers of Hanoi and the Chinese Rings
+  - Anagrams and Pangrams
+- WORLD SIX: Stimulation through Simulation
+  - Five Easy Pieces
+  - A Cosmic Ballet
+  - Sharks and Fish on the Planet Wa-Tor
+  - The Evolution of Flibs
+  - The Extinction of Trilobites and Survival of Smiths
+- WORLD SEVEN: Core Wars
+  - Core War
+  - Core War Encore
+  - The First Core War Tournament
+
 The Magic Machine
 -----------------
 
