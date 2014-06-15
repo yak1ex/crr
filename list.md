@@ -78,3 +78,36 @@ Dewdney, A. K., The Magic Machine: A Handbook of Computer Sorcery, New York, W.H
   - Computers in the Crypt
   - Core Wars
   - Attack of the Viruses
+
+THE TINKERTOY COMPUTER
+----------------------
+
+Dewdney, A. K., THE TINKERTOY COMPUTER: AND OTHER MACHINATIONS, New York, W.H. Freeman and Company, 1993, ISBN 0-7167-2489-8
+
+- Theme One: Matter Computes
+  - The Tinkertoy Computer
+  - The Rope-and-Pulley Wonder
+  - The Infinite Brain
+  - Invasion of the Insectoids
+  - Building a Brain
+  - Dance of the Tur-mites
+- Theme Two: Matter Misbehaves
+  - Microminiature Golf
+  - Star Trek Dynamics
+  - Weather in a Jar
+  - A Portrait of Chaos
+  - Designer Fractals
+  - The Fractal Workshop
+- Theme Three: Mathematics Matters
+  - Mathematical Morsels
+  - Golygon City
+  - Scanning the Cat
+  - Rigid Thinking
+  - Automated Math
+- Theme Four: Computers Create
+  - The Computer Composer
+  - Chaos in A Major
+  - Mark V. Shaney
+  - Face Space
+  - Voltage Sculptures
+  - Latticeworks by Hand
