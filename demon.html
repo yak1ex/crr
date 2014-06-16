@@ -16,7 +16,6 @@ window.onload = function() {
     var idx1 = crr.make_helper('idx1'), adj = crr.make_helper('adj4', { torus: true });
     var table_old = [], table_new = [];
     var colors = crr.make_helper('colors')(20);
-    var counter = 0;
     crr.init('#crr-container', {
         type: 'integer',
         extent: { l: 0, b: 0, t: 100, r: 100 },
@@ -24,7 +23,7 @@ window.onload = function() {
         cell: function(z) {
             return { fill: colors[table_new[idx1(z)]] }
         },
-        leave: function() {
+        leave: function(dat) {
             var temp = table_old; table_old = table_new; table_new = temp;
             for(var j = 0; j < 100; ++j) {
                 for(var i = 0; i < 100; ++i) {
@@ -40,7 +39,7 @@ window.onload = function() {
                     }
                 }
             }
-            $('#counter').text(++counter);
+            $('#counter').text(dat.counter);
         },
         interval: 100,
     });
