@@ -1,7 +1,6 @@
 // TODO: clear when interval
 // TODO: busy / cancel in busy
 // TODO: consider zoom in integer
-// TODO: iteration counter in lib
 // TODO: stop/restart interval to reconfigure
 
 function crrlib()
@@ -17,6 +16,7 @@ function crrlib()
         square_zoom: true,
         ticks: 100,
     };
+    var counter = 0;
     // for alias
     var extent, div, size, ticks, w, h, s;
     // forward declaration
@@ -187,8 +187,9 @@ function crrlib()
             ctx[target].fillRect(0, 0, size.x, size.y);
             ctx[target].strokeStyle = '#000000';
             ctx[target].strokeRect(0, 0, size.x, size.y);
+            ++counter;
             if('enter' in option) {
-                option.enter();
+                option.enter({ counter: counter });
             }
         }
         if('cell' in option) {
@@ -219,7 +220,7 @@ function crrlib()
             }
         }
         if('leave' in option) {
-            option.leave();
+            option.leave({ counter: counter });
         }
         ctx[target].strokeStyle = '#000000';
         ctx[target].strokeRect(0, 0, size.x, size.y);
@@ -307,6 +308,7 @@ function crrlib()
             setup(container);
         },
         run: function() {
+            counter = 0;
             update();
         },
         make_helper: function(key, opt) {
