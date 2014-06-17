@@ -124,6 +124,7 @@ function crrlib()
             if(option.zoom && zoom_anchor !== void 0) {
                 var new_zoom = zoom_extent(e);
                 if(new_zoom !== void 0) {
+                    ctx[guide].clearRect(0, 0, size.x, size.y); // globalCompositeOperation = 'copy' might not have effect
                     ctx[guide].strokeRect(Math.min(e1.pageX, e2.pageX) - offset.left, Math.min(e1.pageY, e2.pageY) - offset.top, Math.abs(e2.pageX - e1.pageX), Math.abs(e2.pageY - e1.pageY));
                 } else {
                     ctx[guide].clearRect(0, 0, size.x, size.y);
