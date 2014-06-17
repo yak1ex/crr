@@ -71,8 +71,15 @@ function crrlib()
         // state
         var extents = [];
         var zoom_anchor;
+        var update_timer;
 
         // helper
+        var start_update = function() {
+            if(update_timer !== void 0) {
+                clearTimeout(update_timer);
+            }
+            update();
+        };
         var prec = function(val) { return math.format(val, { precision: 5}); };
         var coord = function(x, y) { return '(' + prec(x) + ',' + prec(y) + ')'; };
 //      var col = ['#000000','#0000ff','#ff0000','#ff00ff','#00ff00','#00ffff','#ffff00'];
@@ -149,7 +156,7 @@ function crrlib()
                         extents.push(extent);
                         set_extent({ l: math.min(p1.x, p2.x), r: math.max(p1.x, p2.x), b: math.min(p1.y, p2.y), t: math.max(p1.y, p2.y) });
                         extent_updater();
-                        update();
+                        start_update();
                     }
                 }
             });
@@ -169,7 +176,7 @@ function crrlib()
                     if(extents.length > 0) {
                         set_extent(extents.pop());
                         extent_updater();
-                        update();
+                        start_update();
                     }
                 }
             });
@@ -178,7 +185,9 @@ function crrlib()
 
     var target = 0;
     var last_entered;
+    var stop_requested = false;
     update = function(i, j) {
+        update_timer = void 0;
         if(i === void 0) { i = 0; j = 0; }
         var start = $.now();
         if(i === 0 && j === 0) {
@@ -213,7 +222,11 @@ function crrlib()
                     if(!('interval' in option) && $.now() - start > ticks) {
                         ctx[target].strokeStyle = '#000000';
                         ctx[target].strokeRect(0, 0, size.x, size.y);
-                        setTimeout(function() { update(i, j); }, 0);
+                        if(stop_requested) {
+                            stop_requested = false;
+                        } else {
+                            update_timer = setTimeout(function() { update(i, j); }, 0);
+                        }
                         return;
                     }
                 }
@@ -229,7 +242,11 @@ function crrlib()
             ele.eq(  target).css('z-index', 1);
             ele.eq(1-target).css('z-index', 0);
             target = 1 - target;
-            setTimeout(update, Math.max(0, option.interval - $.now() + last_entered));
+            if(stop_requested) {
+                stop_requested = false;
+            } else {
+                update_timer = setTimeout(update, Math.max(0, option.interval - $.now() + last_entered));
+            }
         }
     };
 
@@ -311,6 +328,9 @@ function crrlib()
         run: function() {
             counter = 0;
             update();
+        },
+        stop: function() {
+            stop_requested = true;
         },
         make_helper: function(key, opt) {
             if(key in factories) {
