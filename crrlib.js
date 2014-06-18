@@ -119,8 +119,14 @@ function crrlib()
                 };
 	        if(e1.pageX < offset.left || e2.pageX > size.x + offset.left || e1.pageY < offset.top || e2.pageY > size.y + offset.top) return;
             } else {
-                // TODO: maybe normalization is better
-                e1 = e; e2 = zoom_anchor;
+                e1 = {
+                    pageX: Math.min(e.pageX, zoom_anchor.pageX),
+                    pageY: Math.min(e.pageY, zoom_anchor.pageY)
+                };
+                e2 = {
+                    pageX: Math.max(e.pageX, zoom_anchor.pageX),
+                    pageY: Math.max(e.pageY, zoom_anchor.pageY)
+                };
             }
             if(math.square(e1.pageX - e2.pageX)+math.square(e1.pageY - e2.pageY) <= 100) return;
             return [e1, e2];
