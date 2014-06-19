@@ -55,6 +55,7 @@ function crrlib()
         s = w * h;
     }
 
+    var update_timer;
     var setup = function(container) {
 
         $(container).append(
@@ -71,7 +72,6 @@ function crrlib()
         // state
         var extents = [];
         var zoom_anchor;
-        var update_timer;
 
         // helper
         var start_update = function() {
