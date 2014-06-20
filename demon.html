@@ -15,7 +15,7 @@ window.onload = function() {
     var crr = crrlib();
     var idx1 = crr.make_helper('idx1'), adj = crr.make_helper('adj4', { torus: true });
     var table_old = [], table_new = [];
-    var colors = crr.make_helper('colors')(20);
+    var colors;
     crr.init('#crr-container', {
         type: 'integer',
         extent: { l: 0, b: 0, t: 100, r: 100 },
@@ -43,11 +43,18 @@ window.onload = function() {
         },
         interval: 100,
     });
-    for(var j = 0; j < 100; ++j) {
-        for(var i = 0; i < 100; ++i) {
-            table_new[idx1(i,j)] = Math.floor(Math.random() * colors.length);
+    function init() {
+        colors = crr.make_helper('colors')(Math.floor(Math.random() * 20));
+        for(var j = 0; j < 100; ++j) {
+            for(var i = 0; i < 100; ++i) {
+                table_new[idx1(i,j)] = Math.floor(Math.random() * colors.length);
+            }
         }
-    }
+    };
+    init();
+    stop = crr.stop;
+    run = crr.run;
+    restart = function() { crr.restart(init); };
 
     crr.run();
 
@@ -57,5 +64,8 @@ window.onload = function() {
 <body>
 <div id="crr-container"></div>
 <div><p id="counter"></p></div>
+<input type="button" value="stop" onclick="stop()">
+<input type="button" value="run" onclick="run()">
+<input type="button" value="restart" onclick="restart()">
 </body>
 </html>
