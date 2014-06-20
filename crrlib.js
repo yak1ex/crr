@@ -1,7 +1,6 @@
 // TODO: clear when interval
 // TODO: busy / cancel in busy
 // TODO: consider zoom in integer
-// TODO: stop/restart interval to reconfigure
 
 function crrlib()
 {
@@ -57,6 +56,12 @@ function crrlib()
     }
 
     var update_timer;
+    var start_update = function() {
+        if(update_timer !== void 0) {
+            clearTimeout(update_timer);
+        }
+        update();
+    };
     var setup = function(container) {
 
         $(container).append(
@@ -75,12 +80,6 @@ function crrlib()
         var zoom_anchor;
 
         // helper
-        var start_update = function() {
-            if(update_timer !== void 0) {
-                clearTimeout(update_timer);
-            }
-            update();
-        };
         var prec = function(val) { return math.format(val, { precision: 5}); };
         var coord = function(x, y) { return '(' + prec(x) + ',' + prec(y) + ')'; };
 //      var col = ['#000000','#0000ff','#ff0000','#ff00ff','#00ff00','#00ffff','#ffff00'];
@@ -192,7 +191,7 @@ function crrlib()
 
     var target = 0;
     var last_entered;
-    var stop_requested = false;
+    var stop_requested;
     update = function(i, j) {
         update_timer = void 0;
         if(i === void 0) { i = 0; j = 0; }
@@ -229,8 +228,10 @@ function crrlib()
                     if(!('interval' in option) && $.now() - start > ticks) {
                         ctx[target].strokeStyle = '#000000';
                         ctx[target].strokeRect(0, 0, size.x, size.y);
-                        if(stop_requested) {
-                            stop_requested = false;
+                        if(stop_requested !== void 0) {
+                            var callback = stop_requested;
+                            stop_requested = void 0;
+                            callback();
                         } else {
                             update_timer = setTimeout(function() { update(i, j); }, 0);
                         }
@@ -249,8 +250,10 @@ function crrlib()
             ele.eq(  target).css('z-index', 1);
             ele.eq(1-target).css('z-index', 0);
             target = 1 - target;
-            if(stop_requested) {
-                stop_requested = false;
+            if(stop_requested !== void 0) {
+                var callback = stop_requested;
+                stop_requested = void 0;
+                callback();
             } else {
                 update_timer = setTimeout(update, Math.max(0, option.interval - $.now() + last_entered));
             }
@@ -337,7 +340,13 @@ function crrlib()
             update();
         },
         stop: function() {
-            stop_requested = true;
+            stop_requested = function() {};
+        },
+        restart: function(reconf) {
+            stop_requested = function() {
+                if(reconf !== void 0) reconf();
+                start_update();
+            };
         },
         make_helper: function(key, opt) {
             if(key in factories) {
