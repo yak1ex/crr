@@ -1,6 +1,7 @@
 // TODO: clear when interval
 // TODO: busy / cancel in busy
 // TODO: consider zoom in integer
+// TODO: stop() then restart() should trigger update interval
 
 function crrlib()
 {
