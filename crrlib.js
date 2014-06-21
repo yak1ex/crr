@@ -1,7 +1,6 @@
 // TODO: clear when interval
 // TODO: busy / cancel in busy
 // TODO: consider zoom in integer
-// TODO: stop() then restart() should trigger update interval
 
 function crrlib()
 {
@@ -344,10 +343,15 @@ function crrlib()
             stop_requested = function() {};
         },
         restart: function(reconf) {
-            stop_requested = function() {
+            function restart() {
                 if(reconf !== void 0) reconf();
                 start_update();
-            };
+            }
+            if(update_timer === void 0) {
+                restart();
+            } else {
+                stop_requested = restart;
+            }
         },
         make_helper: function(key, opt) {
             if(key in factories) {
