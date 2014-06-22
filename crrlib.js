@@ -345,6 +345,7 @@ function crrlib()
         restart: function(reconf) {
             function restart() {
                 if(reconf !== void 0) reconf();
+                counter = 0;
                 start_update();
             }
             if(update_timer === void 0) {
