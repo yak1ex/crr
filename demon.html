@@ -45,6 +45,7 @@ window.onload = function() {
     });
     function init() {
         colors = crr.make_helper('colors')(Math.floor(Math.random() * 20));
+            $('#colors').text(colors.length);
         for(var j = 0; j < 100; ++j) {
             for(var i = 0; i < 100; ++i) {
                 table_new[idx1(i,j)] = Math.floor(Math.random() * colors.length);
@@ -63,6 +64,7 @@ window.onload = function() {
 </head>
 <body>
 <div id="crr-container"></div>
+<div><p id="colors"></p></div>
 <div><p id="counter"></p></div>
 <input type="button" value="stop" onclick="stop()">
 <input type="button" value="run" onclick="run()">
