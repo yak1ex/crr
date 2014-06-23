@@ -23,6 +23,10 @@ window.onload = function() {
             return { fill: ((math.abs(math.re(z)) < 10 || math.abs(math.im(z)) < 10) ? '#000000' : '#ffffff') }
         }
     });
+    set = function(f) {
+        formula = math.compile(f);
+        crr.restart();
+    };
     crr.run();
 
 }
@@ -30,5 +34,13 @@ window.onload = function() {
 </head>
 <body>
 <div id="crr-container"></div>
+<select name="formula" onchange="set(this.value)">
+<option value="z^3+c" selected>z^3+c</option>
+<option value="z^5+c">z^5+c</option>
+<option value="z^z+z^5+c">z^z+z^5+c</option>
+<option value="z^z+z^6+c">z^z+z^6+c</option>
+<option value="sin(z)+z^2+c">sin(z)+z^2+c</option>
+<option value="sin(z)+e^z+c">sin(z)+e^z+c</option>
+</select>
 </body>
 </html>
