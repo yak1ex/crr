@@ -113,6 +113,7 @@ function crrlib()
         // event handlers
         var curpos = $('#crrlib-current');
         function zoom_extent(e) {
+            var e1, e2;
             if(option.square_zoom) {
                 var len = Math.max(Math.abs(e.pageX - zoom_anchor.pageX), Math.abs(e.pageY - zoom_anchor.pageY));
                 e1 = {
@@ -143,6 +144,7 @@ function crrlib()
             if(option.zoom && zoom_anchor !== void 0) {
                 var new_zoom = zoom_extent(e);
                 if(new_zoom !== void 0) {
+                    var e1 = new_zoom[0], e2 = new_zoom[1];
                     ctx[guide].clearRect(0, 0, size.x, size.y); // globalCompositeOperation = 'copy' might not have effect
                     ctx[guide].strokeRect(Math.min(e1.pageX, e2.pageX) - offset.left, Math.min(e1.pageY, e2.pageY) - offset.top, Math.abs(e2.pageX - e1.pageX), Math.abs(e2.pageY - e1.pageY));
                 } else {
