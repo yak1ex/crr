@@ -24,6 +24,7 @@ function crrlib()
     var update; // function(i, j)
     var picker; // function(i, j)
     var set_extent; // function(extent)
+    var reset_extent; // function()
 
     var setup_option = function(opt) {
         $.extend(option, opt);
@@ -85,6 +86,11 @@ function crrlib()
 //      var col = ['#000000','#0000ff','#ff0000','#ff00ff','#00ff00','#00ffff','#ffff00'];
         var extent_updater = function() { $('#crrlib-extent').text(coord(extent.l,extent.b)+'-'+coord(extent.r,extent.t)); };
         extent_updater();
+        reset_extent = function() {
+            extents = extents.slice(0, 1);
+            set_extent(extents.pop());
+            extent_updater();
+        }
 
         ele = $('.crrlib-mycanvas').attr({ width: size.x, height: size.y });
         var offset = ele.first().offset();
@@ -345,6 +351,7 @@ function crrlib()
         restart: function(reconf) {
             function restart() {
                 if(reconf !== void 0) reconf();
+                reset_extent();
                 counter = 0;
                 start_update();
             }
