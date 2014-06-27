@@ -1,0 +1,42 @@
+<html>
+<head>
+<link rel="stylesheet" href="crrlib.css" type="text/css" />
+<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/0.22.0/math.min.js"></script>
+<script src="crrlib.js"></script>
+<script type="text/javascript">
+// TODO: avoid duplication of description and value of fomulae
+// TODO: enable to set arbitrary formula
+
+window.onload = function() {
+    var math = mathjs();
+    var crr = crrlib();
+
+    var formula = math.compile('z=z^2+c');
+
+    crr.init('#crr-container', {
+        extent: { l: -3, b: -2, t: 2, r: 1 },
+        cell: function(c) {
+            var z = 0;
+            var k = 0;
+            for(; k < 100; ++k) {
+                z = formula.eval({z: z, c: c });
+                if(math.abs(z) > 2) break;
+            }
+            return { fill: (k == 100 ? '#000000' : '#ffffff') }
+        }
+    });
+    set = function(f) {
+        formula = math.compile(f);
+        crr.restart();
+    };
+    crr.run();
+
+}
+</script>
+</head>
+<body>
+<div id="crr-container"></div>
+</body>
+</html>
