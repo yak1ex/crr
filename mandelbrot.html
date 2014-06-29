@@ -27,10 +27,6 @@ window.onload = function() {
             return { fill: (k == 100 ? '#000000' : '#ffffff') }
         }
     });
-    set = function(f) {
-        formula = math.compile(f);
-        crr.restart();
-    };
     crr.run();
 
 }
