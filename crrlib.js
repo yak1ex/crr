@@ -87,8 +87,10 @@ function crrlib()
         var extent_updater = function() { $('#crrlib-extent').text(coord(extent.l,extent.b)+'-'+coord(extent.r,extent.t)); };
         extent_updater();
         reset_extent = function() {
-            extents = extents.slice(0, 1);
-            set_extent(extents.pop());
+            if(extents.length > 0) {
+                extents = extents.slice(0, 1);
+                set_extent(extents.pop());
+            }
             extent_updater();
         }
 
