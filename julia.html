@@ -1,0 +1,46 @@
+<html>
+<head>
+<link rel="stylesheet" href="crrlib.css" type="text/css" />
+<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/0.22.0/math.min.js"></script>
+<script src="crrlib.js"></script>
+<script type="text/javascript">
+// TODO: avoid duplication of description and value of fomulae
+// TODO: enable to set arbitrary formula
+
+var c0, set;
+window.onload = function() {
+    var math = mathjs();
+    var crr = crrlib();
+
+    var formula = math.compile('z=z^2+c');
+    c0 = math.complex(0.26, 0.55);
+
+    crr.init('#crr-container', {
+        extent: { l: -2, b: -2, t: 2, r: 2 },
+        cell: function(z) {
+            var c = c0;
+            var k = 0;
+            for(; k < 100; ++k) {
+                z = formula.eval({z: z, c: c });
+                if(math.abs(z) > 2) break;
+            }
+            return { fill: (k == 100 ? '#000000' : '#ffffff') }
+        }
+    });
+    set = function() {
+        c0 = math.complex($('#c').val());
+        crr.restart();
+    };
+    crr.run();
+
+}
+</script>
+</head>
+<body>
+<div id="crr-container"></div>
+<input type="text" id="c" name="c" value="0.26+0.55i">
+<input type="button" value="start" onclick="set()">
+</body>
+</html>
