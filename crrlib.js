@@ -1,5 +1,4 @@
 // TODO: clear when interval
-// TODO: busy / cancel in busy
 // TODO: consider zoom in integer
 
 function crrlib()
