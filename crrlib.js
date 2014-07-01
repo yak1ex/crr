@@ -311,34 +311,41 @@ function crrlib()
         colors: function(opt) {
             var type = 'facing';
             if(opt !== void 0 && 'type' in opt) { type = opt.type; }
+            var f=Math.floor;
+            var hsl = function(h,s,l) {
+                var H=f(h/60), rgb=[], C=(1-Math.abs(2*l-1))*s, m=l-C/2;
+                rgb[f((H+4)%6/2)]=m; rgb[f((H+1)%6/2)]=C+m; rgb[2-(H+1)%3]=C*(1-Math.abs(h/60%2-1))+m;
+                return 'rgb('+rgb.map(function(x){return f(x*255+.5);}).join(',')+')';
+            };
+            var step = function(n) {
+                function iscoprime(x,y)
+                {
+                    function gcd(x,y) {
+                        return x%y===0?y:gcd(y,x%y);
+                    }
+                    return gcd(x,y)===1;
+                }
+                var N=f(n/2);
+                if(iscoprime(n,N)) return N;
+                for(var i=1;i<N;i++) {
+                    if(iscoprime(n,N-i)) return N-i;
+                    if(iscoprime(n,N+i)) return N+i;
+                }
+            };
             if(type === 'facing') {
-                var f=Math.floor;
-                var hsl = function(h,s,l) {
-                    var H=f(h/60), rgb=[], C=(1-Math.abs(2*l-1))*s, m=l-C/2;
-                    rgb[f((H+4)%6/2)]=m; rgb[f((H+1)%6/2)]=C+m; rgb[2-(H+1)%3]=C*(1-Math.abs(h/60%2-1))+m;
-                    return 'rgb('+rgb.map(function(x){return f(x*255+.5);}).join(',')+')';
-                };
                 var hcolor = function(h) { return hsl(h, 1, 0.5); };
-                var step = function(n) {
-                    function iscoprime(x,y)
-                    {
-                        function gcd(x,y) {
-                            return x%y===0?y:gcd(y,x%y);
-                        }
-                        return gcd(x,y)===1;
-                    }
-                    var N=f(n/2);
-                    if(iscoprime(n,N)) return N;
-                    for(var i=1;i<N;i++) {
-                        if(iscoprime(n,N-i)) return N-i;
-                        if(iscoprime(n,N+i)) return N+i;
-                    }
-                };
                 return function(n) {
                     if(n===1) return [hcolor(0)];
                     var h=0,s=step(n),r=[];
                     for(var i=0;i<n;++i) { r.push(h/n*360); h=(h+s)%n; }
                     return r.map(hcolor);
+                };
+            } else if(type === 'facingbw') {
+                return function(n) {
+                    if(n===1) return [hsl(0, 0, 0.5)];
+                    var h=0,s=step(n),r=[];
+                    for(var i=0;i<n;++i) { r.push([h/n*360, i/(n-1)]); h=(h+s)%n; }
+                    return r.map(function(e) { return hsl(e[0], 1, e[1]); });
                 };
             } else {
                 throw "Unknown color type '" + type + "' is specified";
