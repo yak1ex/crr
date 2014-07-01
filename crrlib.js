@@ -313,11 +313,12 @@ function crrlib()
             if(opt !== void 0 && 'type' in opt) { type = opt.type; }
             if(type === 'facing') {
                 var f=Math.floor;
-                var hcolor = function(h) {
-                    var H=f(h/60), rgb=[];
-                    rgb[f((H+4)%6/2)]=0; rgb[f((H+1)%6/2)]=1; rgb[2-(H+1)%3]=1-Math.abs(h/60%2-1);
+                var hsl = function(h,s,l) {
+                    var H=f(h/60), rgb=[], C=(1-Math.abs(2*l-1))*s, m=l-C/2;
+                    rgb[f((H+4)%6/2)]=m; rgb[f((H+1)%6/2)]=C+m; rgb[2-(H+1)%3]=C*(1-Math.abs(h/60%2-1))+m;
                     return 'rgb('+rgb.map(function(x){return f(x*255+.5);}).join(',')+')';
                 };
+                var hcolor = function(h) { return hsl(h, 1, 0.5); };
                 var step = function(n) {
                     function iscoprime(x,y)
                     {
