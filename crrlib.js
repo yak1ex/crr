@@ -340,11 +340,11 @@ function crrlib()
                     for(var i=0;i<n;++i) { r.push(h/n*360); h=(h+s)%n; }
                     return r.map(hcolor);
                 };
-            } else if(type === 'facingbw') {
+            } else if(type === 'facingbw' || type === 'facingwb') {
                 return function(n) {
                     if(n===1) return [hsl(0, 0, 0.5)];
                     var h=0,s=step(n),r=[];
-                    for(var i=0;i<n;++i) { r.push([h/n*360, i/(n-1)]); h=(h+s)%n; }
+                    for(var i=0;i<n;++i) { r.push([h/n*360, type === 'facingbw' ? i/(n-1) : 1-i/(n-1)]); h=(h+s)%n; }
                     return r.map(function(e) { return hsl(e[0], 1, e[1]); });
                 };
             } else {
