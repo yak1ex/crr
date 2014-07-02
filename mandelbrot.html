@@ -13,17 +13,18 @@ window.onload = function() {
     var crr = crrlib();
 
     var formula = math.compile('z=z^2+c');
+    var colors = crr.make_helper('colors', { type: 'facingwb' })(10);
 
     crr.init('#crr-container', {
         extent: { l: -3, b: -2, t: 2, r: 1 },
         cell: function(c) {
             var z = 0;
             var k = 0;
-            for(; k < 100; ++k) {
+            for(; k < 200; ++k) {
                 z = formula.eval({z: z, c: c });
                 if(math.abs(z) > 2) break;
             }
-            return { fill: (k == 100 ? '#000000' : '#ffffff') }
+            return { fill: (k == 200 ? '#000000' : colors[math.floor(k/20)]) };
         }
     });
     crr.run();
