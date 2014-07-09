@@ -1,0 +1,77 @@
+<html>
+<head>
+<link rel="stylesheet" href="crrlib.css" type="text/css" />
+<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/0.22.0/math.min.js"></script>
+<script src="crrlib.js"></script>
+<script type="text/javascript">
+// TODO: torus on/off
+// TODO: adj 4/8
+// TODO: colors
+// TODO: size
+var k1 = 2, k2 = 3;
+window.onload = function() {
+    var math = mathjs();
+    var crr = crrlib();
+    var idx1 = crr.make_helper('idx1'), adj = crr.make_helper('adj4', { torus: true });
+    var table_old = [], table_new = [];
+    var colors;
+    crr.init('#crr-container', {
+        type: 'integer',
+        extent: { l: 0, b: 0, t: 100, r: 100 },
+        size: { x: 100, y: 100 },
+        cell: function(z) {
+            return { fill: colors[table_new[idx1(z)]] }
+        },
+        leave: function(dat) {
+            var temp = table_old; table_old = table_new; table_new = temp;
+            var N = colors.length - 1;
+            for(var j = 0; j < 100; ++j) {
+                for(var i = 0; i < 100; ++i) {
+                    var cur = idx1(i,j);
+                    var adjs = adj(i,j);
+                    var a = 0, b = 0, s = table_old[cur];
+                    for(var k = 0; k < adjs.length; ++k) {
+                        var idx = adjs[k];
+                        if(table_old[idx] < N) ++a;
+                        if(table_old[idx] === N) ++b;
+                        s += table_old[idx];
+                    }
+                    if(table_old[cur] === 0) { table_new[cur] = Math.floor(a/k1) + Math.floor(b/k2); }
+                    else if(table_old[cur] === N) { table_new[cur] = 0; }
+                    else { table_new[cur] = Math.floor(s/a) + 3 /* g */; }
+                }
+            }
+            $('#counter').text(dat.counter);
+        },
+        interval: 100,
+    });
+    function init() {
+        colors = crr.make_helper('colors')(Math.floor(Math.random() * 5 + 15));
+            $('#colors').text(colors.length);
+        for(var j = 0; j < 100; ++j) {
+            for(var i = 0; i < 100; ++i) {
+                table_new[idx1(i,j)] = Math.floor(Math.random() * colors.length);
+            }
+        }
+    };
+    init();
+    stop = crr.stop;
+    run = crr.run;
+    restart = function() { crr.restart(init); };
+
+    crr.run();
+
+}
+</script>
+</head>
+<body>
+<div id="crr-container"></div>
+<div><p id="colors"></p></div>
+<div><p id="counter"></p></div>
+<input type="button" value="stop" onclick="stop()">
+<input type="button" value="run" onclick="run()">
+<input type="button" value="restart" onclick="restart()">
+</body>
+</html>
