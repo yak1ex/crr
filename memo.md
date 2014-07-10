@@ -20,9 +20,9 @@ triangle(c, f, e)
 
 ### hodgepodge ###
 
-k1:2, k2:3
+k1:2, k2:3, g:1-20
 
-a = count(neighbor(i,j) < N) (or count(0 < neighbor(i,j) < N)
+a = 1 + count(neighbor(i,j) < N) (or count(0 < neighbor(i,j) < N)
 b = count(neightbor(i, j) == N)
 s = sum(value(i,j), value(neighbor(i,j)))
 value(i,j) == 0 -> a/k1 + b/k2
