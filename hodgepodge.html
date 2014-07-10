@@ -10,7 +10,7 @@
 // TODO: adj 4/8
 // TODO: colors
 // TODO: size
-var k1 = 2, k2 = 3;
+var k1 = 2, k2 = 3, g = 2;
 window.onload = function() {
     var math = mathjs();
     var crr = crrlib();
@@ -31,7 +31,7 @@ window.onload = function() {
                 for(var i = 0; i < 100; ++i) {
                     var cur = idx1(i,j);
                     var adjs = adj(i,j);
-                    var a = 0, b = 0, s = table_old[cur];
+                    var a = 1, b = 0, s = table_old[cur];
                     for(var k = 0; k < adjs.length; ++k) {
                         var idx = adjs[k];
                         if(table_old[idx] < N) ++a;
@@ -40,7 +40,8 @@ window.onload = function() {
                     }
                     if(table_old[cur] === 0) { table_new[cur] = Math.floor(a/k1) + Math.floor(b/k2); }
                     else if(table_old[cur] === N) { table_new[cur] = 0; }
-                    else { table_new[cur] = Math.floor(s/a) + 3 /* g */; }
+                    else { table_new[cur] = Math.floor(s/a) + g; }
+                    if(table_new[cur] > N) table_new[cur] = N;
                 }
             }
             $('#counter').text(dat.counter);
