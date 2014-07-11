@@ -9,6 +9,7 @@
 // TODO: torus on/off
 // TODO: adj 4/8
 // TODO: colors
+// TODO: smooth color b2w
 // TODO: size
 var k1 = 2, k2 = 3, g = 2;
 window.onload = function() {
@@ -49,6 +50,8 @@ window.onload = function() {
         interval: 100,
     });
     function init() {
+        g = Math.floor(Math.random() * 19 + 1);
+            $('#g').text(g);
         colors = crr.make_helper('colors')(Math.floor(Math.random() * 5 + 15));
             $('#colors').text(colors.length);
         for(var j = 0; j < 100; ++j) {
@@ -70,6 +73,7 @@ window.onload = function() {
 <body>
 <div id="crr-container"></div>
 <div><p id="colors"></p></div>
+<div><p id="g"></p></div>
 <div><p id="counter"></p></div>
 <input type="button" value="stop" onclick="stop()">
 <input type="button" value="run" onclick="run()">
