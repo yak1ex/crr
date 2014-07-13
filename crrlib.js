@@ -347,6 +347,15 @@ function crrlib()
                     for(var i=0;i<n;++i) { r.push([h/n*360, type === 'facingbw' ? i/(n-1) : 1-i/(n-1)]); h=(h+s)%n; }
                     return r.map(function(e) { return hsl(e[0], 1, e[1]); });
                 };
+            } else if(type === 'hsllinear') {
+                var from = [0,0,0], to = [0,0,1];
+                if(opt !== void 0 && 'from' in opt) { from = opt.from; }
+                if(opt !== void 0 && 'to' in opt) { to = opt.to; }
+                return function(n) {
+                    var r = [], div = [0,1,2].map(function(i){return (to[i]-from[i])/(n-1);});
+                    for(var i=0;i<n;++i) { r.push([0,1,2].map(function(j){return from[j]+div[j]*i;})); }
+                    return r.map(function(v){return hsl(v[0],v[1],v[2]);});
+                }
             } else {
                 throw "Unknown color type '" + type + "' is specified";
             }
