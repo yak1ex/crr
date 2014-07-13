@@ -52,7 +52,7 @@ window.onload = function() {
     function init() {
         g = Math.floor(Math.random() * 19 + 1);
             $('#g').text(g);
-        colors = crr.make_helper('colors')(Math.floor(Math.random() * 5 + 15));
+        colors = crr.make_helper('colors', { type: 'hsllinear', from: [0,0,1], to: [0,1,0.5] })(Math.floor(Math.random() * 5 + 15));
             $('#colors').text(colors.length);
         for(var j = 0; j < 100; ++j) {
             for(var i = 0; i < 100; ++i) {
