@@ -18,6 +18,15 @@ triangle(a, d, f)
 triangle(b, d, e)
 triangle(c, f, e)
 
+### plant ###
+
+0->1[0]1[0]0
+1->11
+[->[
+]->]
+
+1:bare, leaft:0, [: 45deg ccw/cw
+
 ### hodgepodge ###
 
 k1:2, k2:3, g:1-20
@@ -109,3 +118,95 @@ new picketc <-100-> new raidar <-100-> recovered picket
 
 scanner scanner
 compare two copy, if mismatch found, copy from here to there then jump there
+
+### chaos1 ###
+
+x <- .3
+for i=1 to 2000
+ x <- rx(1-x)
+for i=1 to 300
+ x <- rx(1-x)
+ plot(width * x, 100)
+
+r: 2.95 -> 4.0
+
+### chaos2 ###
+
+for i=1 to 1000
+ xx <- xcos(a) - (y-x^2)sin(a)
+ y <- xsin(a) + (y-x^2)cos8a)
+ x <- xx
+ plot(x,y) [-1,1]x[-1,1]
+
+a: 1.111, .264, 1.5732
+
+### ###
+
+x=0, y=0
+ x <- sin(ay) - cos(bx)
+ y <- sin(cx) - cos(dy)
+
+chicken legs: 2.01, -2.53, 1.61, -.33
+dot launcher: -2.7, -.09, -.86, -2.2
+self-decorating Easter egg: -2.24, .43, -.65, -2.43
+
+### truchet tile ###
+
+1/4 arc
+0: //, 1: \\
+
+### popcorn ###
+
+h: .05
+
+for j=1 to 50
+ for k=1 to 50
+  x0 <- -6 + .24j
+  y0 <- -6 + .24k
+  x <- x0
+  y <- y0
+   for n=1 to 50
+    xx <- x - hsin(y + tan(3y))
+    yy <- y - hsin(x + tan(3x))
+    x <- xx
+    y <- yy
+    plot(4.166x + 25, 4.166y + 25)
+
+### party planner ###
+
+w:30, h:20
++---+
+|   |
+|   |
++---+
+
+table: [10.15]x[9,11] (1origin)
+
+arthur: artist
+bernie: businessman
+dennis: dentist
+millie: model
+penelope: princess
+susan: stockbroker
+viola: violinist
+wally: wightlifter
+
+a b d m p s v w t
+0 15 7 2 6 9 4 12 1
+8 0 6 4 6 3 2 10 1
+11 4 0 5 12 2 9 6 1
+6 9 3 0 10 7 13 5 5
+3 10 5 14 0 11 7 15 5
+12 2 4 8 5 0 12 4 1
+7 8 14 10 4 13 0 3 5
+6 7 13 6 3 8 9 0 5
+
+minimize sum of absolute differences from ideal distances (adj8)
+
+### prime ###
+
+Ulam's spiral
+
+5 4 3
+6 1 2
+7
