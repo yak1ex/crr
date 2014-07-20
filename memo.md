@@ -210,3 +210,45 @@ Ulam's spiral
 5 4 3
 6 1 2
 7
+
+### circle2 ###
+
+for i=1 to 100
+ for j=1 to 100
+  x <- corna + side*i/100
+  y <- cornb + side*j/100
+  if int(x^2 + y^2) % 2 == 0 then plot(i,j)
+
+can change the number of colors
+
+### hopalong ###
+
+x <- 0
+y <- 0
+for i=1 to num
+ plot(x,y)
+ xx <- y - sign(x) * sqrt(abs(bx - c))
+ yy <- a -x
+ x <- xx
+ y <- yy
+
+a,b,c = -200,.1,-80 / .4,1,0 / -3.14,.3,.3 / -1000,.1,-10 (num:10000,100000,600000)
+
+- variant
+  - x <- y-sin(x)
+    y <- a-x
+    a: 0.7 of the number pi
+
+### fredkin ###
+
+if the number of alive neighbors is even then cell <- 0 
+else cell <- 1
+
+### life ###
+
+Life: abcd
+ A living cell dies if it has fewer than [a] or more than [b] living neighbors.
+ A dead cell keeps dead if it has fewer than [c] or more than [d] living neighbors.
+
+Conway's original: Life 2333
+3D: Life 4555, Life 5766 (can emulate original by 2 layers)
