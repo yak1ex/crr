@@ -252,3 +252,76 @@ Life: abcd
 
 Conway's original: Life 2333
 3D: Life 4555, Life 5766 (can emulate original by 2 layers)
+
+### pint ###
+
+for i=1 to num
+ x <- rand()*2
+ y <- rand()*2
+ if (x-1)^2+(y-1)^2 < 1 then ++count
+count*4/num => pi
+
+### zombie ###
+
+for i=1 to num
+ count=0
+ while rand() >= w do ++count
+ ++bucket[count]
+show bucket
+
+average of count => 1/w
+distribution of count => negative exponential
+
+### galton ###
+
+for i=1 to num
+ count = 0
+ for j=1 to level
+  if rand() < 0.5 then ++count
+ ++bucket[count]
+show bucket
+
+nCr
+
+### voters ###
+
+torus configuration
+
+pick one cell
+pick one adjacent
+cell <- adjacent
+
+variant: cell <- ! adjacent
+
+### qwing ###
+
+c <-0, ta <- 0, ts <- 0, q <- 0
+while(1) {
+ if(q == 0 || ta < ts) {
+  if(q != 0) ts <- ts - ta
+  c <- c + ta
+  q <- q + 1
+  use zombie to get ta
+ } else {
+  ta <- ta - ts
+  c <- c + ts
+  q <- q - 1
+  use zombie to get ts
+ }
+}
+
+### wator ###
+
+nfish, nshark, fbreed, sbreed, starve
+
+place nfish fishes and nshark sharks with random ages
+while 1
+ move each fish to unoccupied 4-neighbor
+ ++ its age
+ if its age == fbreed then add fish to old pos and set age = 0 for both fishes
+
+ move each shark to fish occupied 4-neighor if any, otherwise unoccupied 4-neighbor
+ ++ its age
+ set starve = 0 if move to fish occupied
+ kill if starve == starve
+ if its age == sbreed then add shark to old pos and set age = 0, starve = 0 for both shark
