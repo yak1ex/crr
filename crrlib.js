@@ -70,8 +70,8 @@ function crrlib()
             '<canvas class="crrlib-mycanvas" id="crrlib-mycanvas1"></canvas>\n' +
             '<canvas class="crrlib-mycanvas" id="crrlib-mycanvas-guide"></canvas>\n' +
             '</div>\n' +
-            '<p id="crrlib-extent"></p>\n' +
-            '<p id="crrlib-current"></p>\n'
+            '<p id="crrlib-extent">&nbsp;</p>\n' +
+            '<p id="crrlib-current">&nbsp;</p>\n'
         );
         var guide = 2;
 
