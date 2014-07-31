@@ -1,9 +1,9 @@
-### mandelbrot ###
+### mandelbrot [exists] ###
 
 z = 0, c = pick
 loop z = z^2 + c until 1000 count or |z| > 2
 
-### julia ###
+### julia [exists] ###
 
 z = pick, c = some constant
 loop z = z^2 + c until 1000 count or |z| > 2
@@ -27,7 +27,7 @@ triangle(c, f, e)
 
 1:bare, leaft:0, [: 45deg ccw/cw
 
-### hodgepodge ###
+### hodgepodge [exists] ###
 
 k1:2, k2:3, g:1-20
 
