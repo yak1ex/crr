@@ -6,7 +6,6 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/0.22.0/math.min.js"></script>
 <script src="crrlib.js"></script>
 <script type="text/javascript">
-// TODO: avoid duplication of description and value of fomulae
 // TODO: enable to set arbitrary formula
 'use strict';
 var set;
@@ -17,6 +16,11 @@ window.onload = function() {
     var formulae = ['z^3+c', 'z^5+c', 'z^z+z^5+c', 'z^z+z^6+c','sin(z)+z^2+c', 'sin(z)+e^z+c'];
     var formula = math.compile(formulae[0]);
     var c = math.complex(0.5, 0);
+    var opt = '';
+    for(var i = 0; i < formulae.length; ++i) {
+        opt = opt + '<option value="' + formulae[i] + '">' + formulae[i] + '</option>';
+    }
+    $('#formulae-select').html(opt);
 
     crr.init('#crr-container', {
         cell: function(z) {
@@ -38,13 +42,7 @@ window.onload = function() {
 </head>
 <body>
 <div id="crr-container"></div>
-<select name="formula" onchange="set(this.value)">
-<option value="z^3+c" selected>z^3+c</option>
-<option value="z^5+c">z^5+c</option>
-<option value="z^z+z^5+c">z^z+z^5+c</option>
-<option value="z^z+z^6+c">z^z+z^6+c</option>
-<option value="sin(z)+z^2+c">sin(z)+z^2+c</option>
-<option value="sin(z)+e^z+c">sin(z)+e^z+c</option>
+<select id="formulae-select" name="formula" onchange="set(this.value)">
 </select>
 </body>
 </html>
