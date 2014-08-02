@@ -1,0 +1,22 @@
+{
+  "name": "crr",
+  "version": "0.0.0",
+  "description": "Computer Recreations Revisited",
+  "main": "crrlib.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yak1ex/crr.git"
+  },
+  "author": "Yasutaka ATARASHI",
+  "license": "zlib",
+  "bugs": {
+    "url": "https://github.com/yak1ex/crr/issues"
+  },
+  "homepage": "https://github.com/yak1ex/crr",
+  "dependencies": {
+    "grunt": "^0.4.5"
+  }
+}
