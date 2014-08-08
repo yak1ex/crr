@@ -14,5 +14,9 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "devDependencies": {
+    "mathjs": "~0.26.0",
+    "jquery": "~2.1.1"
+  }
 }
