@@ -1,0 +1,37 @@
+<html>
+<head>
+<link rel="stylesheet" href="stylesheets/crrlib.css">
+<script src="javascripts/crr.js"></script>
+<script type="text/javascript">
+// TODO: Colorize
+'use strict';
+window.onload = function() {
+    var crr = crrlib();
+
+    var formula = math.compile('z=z^2+c');
+    var num_color = 50;
+    var max_count = 200;
+    var div = max_count / num_color;
+    var colors = crr.make_helper('colors', { type: 'facingwb' })(num_color);
+
+    crr.init('#crr-container', {
+        extent: { l: -3, b: -2, t: 2, r: 1 },
+        cell: function(c) {
+            var z = 0;
+            var k = 0;
+            for(; k < max_count; ++k) {
+                z = formula.eval({z: z, c: c });
+                if(math.abs(z) > 2) break;
+            }
+            return { fill: (k == max_count ? '#000000' : colors[math.floor(k/div)]) };
+        }
+    });
+    crr.run();
+
+}
+</script>
+</head>
+<body>
+<div id="crr-container"></div>
+</body>
+</html>
