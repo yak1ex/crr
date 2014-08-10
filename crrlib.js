@@ -4,7 +4,6 @@
 function crrlib()
 {
     'use strict';
-    var math = mathjs();
 
     var option = {
         size: { x: 101, y: 101 },

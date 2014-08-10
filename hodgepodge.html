@@ -1,10 +1,13 @@
 <html>
 <head>
+<!-- build:css stylesheets/crrlib.css -->
 <link rel="stylesheet" href="crrlib.css" type="text/css" />
-<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>-->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/0.22.0/math.min.js"></script>
+<!-- endbuild -->
+<!-- build:js javascripts/crr.js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/mathjs/dist/math.js"></script>
 <script src="crrlib.js"></script>
+<!-- endbuild -->
 <script type="text/javascript">
 // TODO: torus on/off
 // TODO: adj 4/8
@@ -14,7 +17,6 @@
 var k1 = 2, k2 = 3, g = 2;
 var stop, run, restart;
 window.onload = function() {
-    var math = mathjs();
     var crr = crrlib();
     var idx1 = crr.make_helper('idx1'), adj = crr.make_helper('adj4', { torus: true });
     var table_old = [], table_new = [];

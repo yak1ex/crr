@@ -1,16 +1,18 @@
 <html>
 <head>
+<!-- build:css stylesheets/crrlib.css -->
 <link rel="stylesheet" href="crrlib.css" type="text/css" />
-<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>-->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/0.22.0/math.min.js"></script>
+<!-- endbuild -->
+<!-- build:js javascripts/crr.js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/mathjs/dist/math.js"></script>
 <script src="crrlib.js"></script>
+<!-- endbuild -->
 <script type="text/javascript">
 // TODO: enable to set arbitrary formula
 'use strict';
 var set;
 window.onload = function() {
-    var math = mathjs();
     var crr = crrlib();
 
     var formulae = ['z^3+c', 'z^5+c', 'z^z+z^5+c', 'z^z+z^6+c','sin(z)+z^2+c', 'sin(z)+e^z+c'];
