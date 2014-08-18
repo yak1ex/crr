@@ -1,0 +1,12 @@
+#!/bin/sh
+case $0 in
+*/ghps)
+  command=push
+  squash=
+  ;;
+*/ghpl)
+  command=pull
+  squash=--squash
+  ;;
+esac
+git subtree $command --prefix gh-pages origin gh-pages $squash
