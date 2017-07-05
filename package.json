@@ -15,12 +15,14 @@
   "bugs": {
     "url": "https://github.com/yak1ex/crr/issues"
   },
-  "homepage": "https://github.com/yak1ex/crr",
+  "homepage": "http://yak1ex.github.io/crr/",
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-contrib-concat": "~0.5.0",
     "grunt-contrib-uglify": "~0.5.1",
     "grunt-usemin": "^2.3.0",
-    "grunt-contrib-copy": "^0.5.0"
+    "grunt-contrib-copy": "^0.5.0",
+    "mathjs": "~0.26.0",
+    "jquery": "~2.1.1"
   }
 }
