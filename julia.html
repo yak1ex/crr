@@ -5,7 +5,7 @@
 <!-- endbuild -->
 <!-- build:js javascripts/crr.js -->
 <script src="node_modules/jquery/dist/jquery.js"></script>
-<script src="node_modules/mathjs/dist/math.js"></script>
+<script src="node_modules/mathjs/lib/browser/math.js"></script>
 <script src="crrlib.js"></script>
 <!-- endbuild -->
 <script type="text/javascript">
@@ -29,7 +29,7 @@ window.onload = function() {
             var c = c0;
             var k = 0;
             for(; k < max_count; ++k) {
-                z = formula.eval({z: z, c: c });
+                z = formula.evaluate({z: z, c: c });
                 if(math.abs(z) > 2) break;
             }
             return { fill: (k == max_count ? '#000000' : colors[math.floor(k/div)]) }

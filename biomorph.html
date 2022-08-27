@@ -5,7 +5,7 @@
 <!-- endbuild -->
 <!-- build:js javascripts/crr.js -->
 <script src="node_modules/jquery/dist/jquery.js"></script>
-<script src="node_modules/mathjs/dist/math.js"></script>
+<script src="node_modules/mathjs/lib/browser/math.js"></script>
 <script src="crrlib.js"></script>
 <!-- endbuild -->
 <script type="text/javascript">
@@ -27,7 +27,7 @@ window.onload = function() {
     crr.init('#crr-container', {
         cell: function(z) {
             for(var k = 0; k < 10; ++k) {
-                z = formula.eval({z: z, c: c });
+                z = formula.evaluate({z: z, c: c });
                 if(math.abs(math.re(z)) > 10 || math.abs(math.im(z)) > 10 || math.abs(z) > 10) break;
             }
             return { fill: ((math.abs(math.re(z)) < 10 || math.abs(math.im(z)) < 10) ? '#000000' : '#ffffff') }
