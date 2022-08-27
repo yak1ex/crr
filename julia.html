@@ -1,0 +1,46 @@
+<html>
+<head>
+<link rel="stylesheet" href="stylesheets/crrlib.css">
+<script src="javascripts/crr.js"></script>
+<script type="text/javascript">
+// TODO: Colorize
+// TODO: Pick with Mandelbrot set draw
+'use strict';
+var c0, set;
+window.onload = function() {
+    var crr = crrlib();
+
+    var formula = math.compile('z=z^2+c');
+    c0 = math.complex(0.26, 0.55);
+    var num_color = 50;
+    var max_count = 200;
+    var div = max_count / num_color;
+    var colors = crr.make_helper('colors', { type: 'facingwb' })(num_color);
+
+    crr.init('#crr-container', {
+        extent: { l: -2, b: -2, t: 2, r: 2 },
+        cell: function(z) {
+            var c = c0;
+            var k = 0;
+            for(; k < max_count; ++k) {
+                z = formula.eval({z: z, c: c });
+                if(math.abs(z) > 2) break;
+            }
+            return { fill: (k == max_count ? '#000000' : colors[math.floor(k/div)]) }
+        }
+    });
+    set = function() {
+        c0 = math.complex($('#c').val());
+        crr.restart();
+    };
+    crr.run();
+
+}
+</script>
+</head>
+<body>
+<div id="crr-container"></div>
+<input type="text" id="c" name="c" value="0.26+0.55i">
+<input type="button" value="start" onclick="set()">
+</body>
+</html>

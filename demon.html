@@ -1,0 +1,70 @@
+<html>
+<head>
+<link rel="stylesheet" href="stylesheets/crrlib.css">
+<script src="javascripts/crr.js"></script>
+<script type="text/javascript">
+// TODO: torus on/off
+// TODO: adj 4/8
+// TODO: colors
+// TODO: size
+var stop, run, restart;
+window.onload = function() {
+    var crr = crrlib();
+    var idx1 = crr.make_helper('idx1'), adj = crr.make_helper('adj4', { torus: true });
+    var table_old = [], table_new = [];
+    var colors;
+    crr.init('#crr-container', {
+        type: 'integer',
+        extent: { l: 0, b: 0, t: 100, r: 100 },
+        size: { x: 100, y: 100 },
+        cell: function(z) {
+            return { fill: colors[table_new[idx1(z)]] }
+        },
+        leave: function(dat) {
+            var temp = table_old; table_old = table_new; table_new = temp;
+            for(var j = 0; j < 100; ++j) {
+                for(var i = 0; i < 100; ++i) {
+                    var cur = idx1(i,j);
+                    table_new[cur] = table_old[cur];
+                    var adjs = adj(i,j);
+                    for(var k = 0; k < adjs.length; ++k) {
+                        var idx = adjs[k];
+                        if(table_old[idx] === ((table_old[cur] + 1) %  colors.length)) {
+                            table_new[cur] = table_old[idx];
+                            break;
+                        }
+                    }
+                }
+            }
+            $('#counter').text(dat.counter);
+        },
+        interval: 100,
+    });
+    function init() {
+        colors = crr.make_helper('colors')(Math.floor(Math.random() * 20));
+            $('#colors').text(colors.length);
+        for(var j = 0; j < 100; ++j) {
+            for(var i = 0; i < 100; ++i) {
+                table_new[idx1(i,j)] = Math.floor(Math.random() * colors.length);
+            }
+        }
+    };
+    init();
+    stop = crr.stop;
+    run = crr.run;
+    restart = function() { crr.restart(init); };
+
+    crr.run();
+
+}
+</script>
+</head>
+<body>
+<div id="crr-container"></div>
+<div><p id="colors"></p></div>
+<div><p id="counter"></p></div>
+<input type="button" value="stop" onclick="stop()">
+<input type="button" value="run" onclick="run()">
+<input type="button" value="restart" onclick="restart()">
+</body>
+</html>
