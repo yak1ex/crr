@@ -21,7 +21,7 @@ window.onload = function() {
     crr.init('#crr-container', {
         cell: function(z) {
             for(var k = 0; k < 10; ++k) {
-                z = formula.eval({z: z, c: c });
+                z = formula.evaluate({z: z, c: c });
                 if(math.abs(math.re(z)) > 10 || math.abs(math.im(z)) > 10 || math.abs(z) > 10) break;
             }
             return { fill: ((math.abs(math.re(z)) < 10 || math.abs(math.im(z)) < 10) ? '#000000' : '#ffffff') }
