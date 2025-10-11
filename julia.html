@@ -1,29 +1,22 @@
 <html>
 <head>
-<!-- build:css stylesheets/crrlib.css -->
-<link rel="stylesheet" href="crrlib.css" type="text/css" />
-<!-- endbuild -->
-<!-- build:js javascripts/crr.js -->
-<script src="node_modules/jquery/dist/jquery.js"></script>
-<script src="node_modules/mathjs/lib/browser/math.js"></script>
-<script src="crrlib.js"></script>
-<!-- endbuild -->
-<script type="text/javascript">
+<script>
 // TODO: Colorize
 // TODO: Pick with Mandelbrot set draw
 'use strict';
 var c0, set;
 window.onload = function() {
-    var crr = crrlib();
+    var crrlib = crr.crrlib();
+    var math = crr.math
 
     var formula = math.compile('z=z^2+c');
     c0 = math.complex(0.26, 0.55);
     var num_color = 50;
     var max_count = 200;
     var div = max_count / num_color;
-    var colors = crr.make_helper('colors', { type: 'facingwb' })(num_color);
+    var colors = crrlib.make_helper('colors', { type: 'facingwb' })(num_color);
 
-    crr.init('#crr-container', {
+    crrlib.init('#crr-container', {
         extent: { l: -2, b: -2, t: 2, r: 2 },
         cell: function(z) {
             var c = c0;
@@ -37,9 +30,9 @@ window.onload = function() {
     });
     set = function() {
         c0 = math.complex($('#c').val());
-        crr.restart();
+        crrlib.restart();
     };
-    crr.run();
+    crrlib.run();
 
 }
 </script>

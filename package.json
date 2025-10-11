@@ -5,7 +5,10 @@
   "main": "crrlib.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "preinstall": "npx npm-force-resolutions"
+    "preinstall": "npx npm-force-resolutions@0.0.3",
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development --watch",
+    "start": "webpack serve --mode development"
   },
   "repository": {
     "type": "git",
@@ -18,15 +21,13 @@
   },
   "homepage": "http://yak1ex.github.io/crr/",
   "devDependencies": {
-    "grunt": "^1.5.3",
-    "grunt-contrib-concat": "^2.1.0",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-uglify": "^5.2.2",
-    "grunt-usemin": "^3.1.1",
-    "jquery": "^3.6.1",
-    "mathjs": "^11.1.0"
-  },
-  "resolutions": {
-    "lodash": "^4.17.21"
+    "css-loader": "^7.1.2",
+    "html-webpack-harddisk-plugin": "^2.0.0",
+    "html-webpack-plugin": "^5.6.4",
+    "mathjs": "^11.1.0",
+    "mini-css-extract-plugin": "^2.9.4",
+    "webpack": "^5.102.0",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
   }
 }

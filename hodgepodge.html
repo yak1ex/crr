@@ -1,14 +1,6 @@
 <html>
 <head>
-<!-- build:css stylesheets/crrlib.css -->
-<link rel="stylesheet" href="crrlib.css" type="text/css" />
-<!-- endbuild -->
-<!-- build:js javascripts/crr.js -->
-<script src="node_modules/jquery/dist/jquery.js"></script>
-<script src="node_modules/mathjs/lib/browser/math.js"></script>
-<script src="crrlib.js"></script>
-<!-- endbuild -->
-<script type="text/javascript">
+<script>
 // TODO: torus on/off
 // TODO: adj 4/8
 // TODO: colors
@@ -17,11 +9,13 @@
 var k1 = 2, k2 = 3, g = 2;
 var stop, run, restart;
 window.onload = function() {
-    var crr = crrlib();
-    var idx1 = crr.make_helper('idx1'), adj = crr.make_helper('adj4', { torus: true });
+    var crrlib = crr.crrlib();
+    var math = crr.math
+
+    var idx1 = crrlib.make_helper('idx1'), adj = crrlib.make_helper('adj4', { torus: true });
     var table_old = [], table_new = [];
     var colors;
-    crr.init('#crr-container', {
+    crrlib.init('#crr-container', {
         type: 'integer',
         extent: { l: 0, b: 0, t: 100, r: 100 },
         size: { x: 100, y: 100 },
@@ -48,15 +42,15 @@ window.onload = function() {
                     if(table_new[cur] > N) table_new[cur] = N;
                 }
             }
-            $('#counter').text(dat.counter);
+            document.querySelector('#counter').innerText = dat.counter;
         },
         interval: 100,
     });
     function init() {
         g = Math.floor(Math.random() * 19 + 1);
-            $('#g').text(g);
-        colors = crr.make_helper('colors', { type: 'hsllinear', from: [0,0,1], to: [0,1,0.5] })(Math.floor(Math.random() * 5 + 15));
-            $('#colors').text(colors.length);
+        document.querySelector('#g').innerText = g;
+        colors = crrlib.make_helper('colors', { type: 'hsllinear', from: [0,0,1], to: [0,1,0.5] })(Math.floor(Math.random() * 5 + 15));
+        document.querySelector('#colors').innerText = colors.length;
         for(var j = 0; j < 100; ++j) {
             for(var i = 0; i < 100; ++i) {
                 table_new[idx1(i,j)] = Math.floor(Math.random() * colors.length);
@@ -64,11 +58,11 @@ window.onload = function() {
         }
     };
     init();
-    stop = crr.stop;
-    run = crr.run;
-    restart = function() { crr.restart(init); };
+    stop = crrlib.stop;
+    run = crrlib.run;
+    restart = function() { crrlib.restart(init); };
 
-    crr.run();
+    crrlib.run();
 
 }
 </script>

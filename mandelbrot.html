@@ -1,26 +1,19 @@
 <html>
 <head>
-<!-- build:css stylesheets/crrlib.css -->
-<link rel="stylesheet" href="crrlib.css" type="text/css" />
-<!-- endbuild -->
-<!-- build:js javascripts/crr.js -->
-<script src="node_modules/jquery/dist/jquery.js"></script>
-<script src="node_modules/mathjs/lib/browser/math.js"></script>
-<script src="crrlib.js"></script>
-<!-- endbuild -->
-<script type="text/javascript">
+<script>
 // TODO: Colorize
 'use strict';
 window.onload = function() {
-    var crr = crrlib();
+    var crrlib = crr.crrlib();
+    var math = crr.math
 
     var formula = math.compile('z=z^2+c');
     var num_color = 50;
     var max_count = 200;
     var div = max_count / num_color;
-    var colors = crr.make_helper('colors', { type: 'facingwb' })(num_color);
+    var colors = crrlib.make_helper('colors', { type: 'facingwb' })(num_color);
 
-    crr.init('#crr-container', {
+    crrlib.init('#crr-container', {
         extent: { l: -3, b: -2, t: 2, r: 1 },
         cell: function(c) {
             var z = 0;
@@ -32,7 +25,7 @@ window.onload = function() {
             return { fill: (k == max_count ? '#000000' : colors[math.floor(k/div)]) };
         }
     });
-    crr.run();
+    crrlib.run();
 
 }
 </script>

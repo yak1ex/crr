@@ -1,7 +1,12 @@
+import { create, all } from 'mathjs';
+import './crrlib.css';
+
+export const math = create(all);
+
 // TODO: clear when interval
 // TODO: consider zoom in integer
 
-function crrlib()
+export function crrlib()
 {
     'use strict';
 
@@ -25,7 +30,7 @@ function crrlib()
     var reset_extent; // function()
 
     var setup_option = function(opt) {
-        $.extend(option, opt);
+        Object.assign(option, opt);
         // for integer, set_extent() handles div
         if(option.type === 'complex') {
             div = option.div;
@@ -63,15 +68,17 @@ function crrlib()
     };
     var setup = function(container) {
 
-        $(container).append(
+        // FIXME: should not use innerHTML
+        var container_element = document.querySelector(container);
+        container_element.innerHTML =
+            container_element.innerHTML +
             '<div id="crrlib-canvas-container">\n' +
             '<canvas class="crrlib-mycanvas" id="crrlib-mycanvas0"></canvas>\n' +
             '<canvas class="crrlib-mycanvas" id="crrlib-mycanvas1"></canvas>\n' +
             '<canvas class="crrlib-mycanvas" id="crrlib-mycanvas-guide"></canvas>\n' +
             '</div>\n' +
             '<p id="crrlib-extent">&nbsp;</p>\n' +
-            '<p id="crrlib-current">&nbsp;</p>\n'
-        );
+            '<p id="crrlib-current">&nbsp;</p>\n';
         var guide = 2;
 
         // state
@@ -82,7 +89,9 @@ function crrlib()
         var prec = function(val) { return math.format(val, { precision: 5}); };
         var coord = function(x, y) { return '(' + prec(x) + ',' + prec(y) + ')'; };
 //      var col = ['#000000','#0000ff','#ff0000','#ff00ff','#00ff00','#00ffff','#ffff00'];
-        var extent_updater = function() { $('#crrlib-extent').text(coord(extent.l,extent.b)+'-'+coord(extent.r,extent.t)); };
+        var extent_updater = function() {
+            document.querySelector('#crrlib-extent').innerText = coord(extent.l,extent.b)+'-'+coord(extent.r,extent.t);
+        };
         extent_updater();
         reset_extent = function() {
             if(extents.length > 0) {
@@ -92,8 +101,12 @@ function crrlib()
             extent_updater();
         }
 
-        ele = $('.crrlib-mycanvas').attr({ width: size.x, height: size.y });
-        var offset = ele.first().offset();
+        ele = document.querySelectorAll('.crrlib-mycanvas');
+        ele.forEach(ele => {
+            ele.setAttribute('width', size.x);
+            ele.setAttribute('height', size.y);
+        });
+        var offset = { left: ele[0].offsetLeft, top: ele[0].offsetTop };
         var getpos = {
             complex: function(e) { return {
                 x: (extent.r - extent.l) / size.x * (e.pageX - offset.left) + extent.l,
@@ -104,14 +117,16 @@ function crrlib()
                 y: Math.ceil((extent.b - extent.t) / size.y * (e.pageY - offset.top)) + extent.t
             }},
         }[option.type];
-        ctx = $.map(ele, function (ele) { return ele.getContext('2d'); });
+        ctx = Array.from(ele).map(ele => ele.getContext('2d'));
         ctx[guide].strokeStyle = '#ff0000';
         ctx[guide].globalCompositeOperation = 'copy';
 
-        $('#crrlib-canvas-container').width(size.x).height(size.y);
+        var container = document.querySelector('#crrlib-canvas-container');
+        container.style.width =  size.x;
+        container.style.height = size.y;
 
         // event handlers
-        var curpos = $('#crrlib-current');
+        var curpos = document.querySelector('#crrlib-current');
         function zoom_extent(e) {
             var e1, e2;
             if(option.square_zoom) {
@@ -138,9 +153,9 @@ function crrlib()
             if(math.square(e1.pageX - e2.pageX)+math.square(e1.pageY - e2.pageY) <= 100) return;
             return [e1, e2];
         }
-        ele.mousemove(function(e) {
+        ele.forEach(ele => ele.addEventListener('mousemove', e => {
             var p = getpos(e);
-            curpos.text(coord(p.x, p.y));
+            curpos.innerText = coord(p.x, p.y);
             if(option.zoom && zoom_anchor !== void 0) {
                 var new_zoom = zoom_extent(e);
                 if(new_zoom !== void 0) {
@@ -151,14 +166,14 @@ function crrlib()
                     ctx[guide].clearRect(0, 0, size.x, size.y);
                 }
             }
-        });
+        }));
         if(option.zoom) {
-            ele.mousedown(function(e) {
+            ele.forEach(ele => ele.addEventListener('mousedown', e => {
                 if(e.which == 1) {
                     zoom_anchor = { pageX: e.pageX, pageY: e.pageY };
                 }
-            });
-            ele.mouseup(function(e) {
+            }));
+            ele.forEach(ele => ele.addEventListener('mouseup', e => {
                 if(e.which == 1) {
                     ctx[guide].clearRect(0, 0, size.x, size.y);
                     var new_zoom = zoom_extent(e);
@@ -173,19 +188,19 @@ function crrlib()
                         start_update();
                     }
                 }
-            });
-            $(window).mouseup(function(e) {
+            }));
+            window.addEventListener('mouseup', e => {
                 if(e.which == 1) {
                     ctx[guide].clearRect(0, 0, size.x, size.y);
                     zoom_anchor = void 0;
                 }
             });
-            ele.mouseleave(function(e) {
+            ele.forEach(ele => ele.addEventListener('mouseleave', e => {
                 if(zoom_anchor !== void 0) {
                     ctx[guide].clearRect(0, 0, size.x, size.y);
                 }
-            });
-            ele.dblclick(function(e) {
+            }));
+            ele.forEach(ele => ele.addEventListener('dblclick', e => {
                 if(e.which == 1) {
                     if(extents.length > 0) {
                         set_extent(extents.pop());
@@ -193,7 +208,7 @@ function crrlib()
                         start_update();
                     }
                 }
-            });
+            }));
         }
     };
 
@@ -203,10 +218,10 @@ function crrlib()
     update = function(i, j) {
         update_timer = void 0;
         if(i === void 0) { i = 0; j = 0; }
-        var start = $.now();
+        var start = Date.now();
         if(i === 0 && j === 0) {
             last_entered = start;
-            if(!('interval' in option)) { ele.eq(target).css('z-index', 1); }
+            if(!('interval' in option)) { ele[target].style.zIndex = 1; }
             ctx[target].fillStyle = '#ffffff';
             ctx[target].fillRect(0, 0, size.x, size.y);
             ctx[target].strokeStyle = '#000000';
@@ -233,7 +248,7 @@ function crrlib()
                     }
 
                     ++j;
-                    if(!('interval' in option) && $.now() - start > ticks) {
+                    if(!('interval' in option) && Date.now() - start > ticks) {
                         ctx[target].strokeStyle = '#000000';
                         ctx[target].strokeRect(0, 0, size.x, size.y);
                         if(stop_requested !== void 0) {
@@ -255,15 +270,15 @@ function crrlib()
         ctx[target].strokeStyle = '#000000';
         ctx[target].strokeRect(0, 0, size.x, size.y);
         if('interval' in option) {
-            ele.eq(  target).css('z-index', 1);
-            ele.eq(1-target).css('z-index', 0);
+            ele[target].style.zIndex = 1;
+            ele[1-target].style.zIndex = 0;
             target = 1 - target;
             if(stop_requested !== void 0) {
                 var callback = stop_requested;
                 stop_requested = void 0;
                 callback();
             } else {
-                update_timer = setTimeout(update, Math.max(0, option.interval - $.now() + last_entered));
+                update_timer = setTimeout(update, Math.max(0, option.interval - Date.now() + last_entered));
             }
         }
     };
